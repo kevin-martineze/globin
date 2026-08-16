@@ -34,9 +34,13 @@ Qué hace falta, una pieza por generación:
 - [ ] **Versión de un solo color.** No se puede derivar por código: las cintas
       solo se leen por sombreado, así que una silueta plana se convierte en una
       mancha. Hay que dibujar dónde va el espacio negativo.
-- [ ] **Fondo abstracto del hero**, 2560×1440, una sola imagen a sangre, sin
-      mockups ni texto. Entraría en `[data-hero-media]`, que ya está preparado.
-- [ ] **Textura de red tileable**, 1600×1600, para las bandas de sección.
+- [x] **Fondo abstracto del hero.** Entregado y montado
+      (`src/assets/textures/hero-ribbons.jpg`). Llegó a 1376×768: escala por
+      encima de su tamaño nativo en pantallas grandes, y el grano lo disimula.
+      Si algún día llega a 2560×1440, se reemplaza el archivo y ya.
+- [x] **Textura de red.** Entregada y montada en la sección de proceso
+      (`node-grid.jpg`). No tilea del todo, así que va como capa única a
+      `object-cover` en lugar de repetida.
 
 ## Mejora la conversión
 

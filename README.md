@@ -36,7 +36,7 @@ and nowhere else — read that file to know what the site says and in what order
 
 | # | Section | Component | Comes from |
 | --- | --- | --- | --- |
-| — | Hero | `Hero.astro` | brief §9 |
+| — | Hero | `Hero.astro` | brief §9 + `textures.heroRibbons` |
 | — | Attribute ticker | `Marquee.astro` | brief §10 |
 | 01 | Problem + solution | `Approach.astro` | brief §9, §4 |
 | 02 | Services | `Services.astro` | `data/services.ts` |
@@ -185,6 +185,26 @@ constant in the script no longer matches the new file.
 single-colour version of the mark. The silhouette cannot be derived — the
 ribbons read only through shading, so a flat threshold collapses into a blob.
 That one needs drawing.
+
+### Backdrops
+
+Two generated renders live in `src/assets/textures/` and are registered as
+`textures` in `src/data/media.ts`:
+
+- `hero-ribbons.jpg` (1376×768) — the hero backdrop. Its left ~45% is empty by
+  design, which is where the headline goes.
+- `node-grid.jpg` (1024×1024) — the process section. It nearly tiles but not
+  exactly, so it is used as a single `object-cover` layer, never repeated.
+
+Both are decorative: `alt=""` plus `aria-hidden`, and their alt strings in the
+registry are empty on purpose.
+
+Two things to preserve when touching the hero. **No blend mode on the render** —
+`mix-blend-screen` was tried and it lifted the blacks and turned the silver
+ribbons grey-green. And the **veils live outside `[data-hero-media]`**, so they
+hold still while the render drifts under them; the left-to-right veil is what
+guarantees headline contrast at every viewport width, rather than hoping the
+ribbons fall somewhere harmless.
 
 ## Adding a section
 

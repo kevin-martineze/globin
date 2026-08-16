@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import { phases, processIntro } from '../data/process';
+import { textures } from '../data/media';
 
 /**
  * The method as a pinned horizontal rail (`data-rail` in motion.ts): on desktop
@@ -16,7 +18,20 @@ import { phases, processIntro } from '../data/process';
   data-rail
   class="relative flex flex-col justify-center overflow-hidden py-24 lg:min-h-screen lg:py-0"
 >
-  <div class="pointer-events-none absolute inset-0 -z-10 grid-lines mask-fade-b opacity-25"></div>
+  {/* One cover layer, never `background-repeat`: the render nearly tiles but
+      not exactly, and a repeated seam is more visible than an upscaled pixel.
+      Masked at the bottom so the section melts into the next one. */}
+  <div class="mask-fade-b pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+    <Image
+      src={textures.nodeGrid.src}
+      alt=""
+      aria-hidden="true"
+      widths={[768, 1024]}
+      sizes="100vw"
+      loading="lazy"
+      class="size-full object-cover opacity-30"
+    />
+  </div>
 
   <div class="shell">
     <div class="max-w-3xl">
