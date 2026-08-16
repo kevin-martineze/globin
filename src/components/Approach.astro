@@ -1,0 +1,68 @@
+---
+/**
+ * Problem and solution (brief §9). They are one section rather than two: the
+ * question only works if the answer is in the same eyeful, and splitting them
+ * would put a scroll break between a worry and its resolution.
+ *
+ * The four symptoms below are the brief's own description of the target client
+ * (§4): "tareas manuales, información dispersa, falta de automatización,
+ * procesos lentos y dificultad para escalar".
+ */
+const symptoms = [
+  { code: '01', label: 'Tareas manuales que se repiten todos los días' },
+  { code: '02', label: 'Información dispersa entre herramientas que no se hablan' },
+  { code: '03', label: 'Procesos lentos y con errores difíciles de rastrear' },
+  { code: '04', label: 'Sistemas que ya no responden al tamaño del negocio' },
+];
+---
+
+<section id="enfoque" class="relative py-24 lg:py-36">
+  <div class="shell">
+    <div class="grid gap-14 lg:grid-cols-12 lg:gap-20">
+      <div class="lg:col-span-7">
+        <p class="eyebrow mb-6" data-reveal="fade">01 — El punto de partida</p>
+
+        <h2 class="display-tight text-[clamp(1.9rem,3.6vw,3.1rem)] text-bone" data-split>
+          ¿Tu empresa depende demasiado de procesos manuales, herramientas
+          desconectadas o sistemas que ya no responden a tus necesidades?
+        </h2>
+
+        <ul class="mt-10 space-y-px overflow-hidden rounded-2xl border hairline">
+          {
+            symptoms.map((item, index) => (
+              <li
+                class="flex items-center gap-5 border-b hairline bg-ink-900/40 px-6 py-5 last:border-0"
+                data-reveal
+                data-reveal-delay={index * 0.06}
+              >
+                <span class="font-mono text-xs text-brand-accent/80">{item.code}</span>
+                <span class="text-sm leading-relaxed text-bone/85">{item.label}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="lg:col-span-5">
+        <div class="card sticky top-28 p-8 lg:p-10" data-reveal="left">
+          <p class="eyebrow mb-6">La respuesta</p>
+          <p class="display-tight text-2xl leading-tight text-bone">
+            Analizamos tu situación, proponemos una solución viable y construimos
+            la tecnología que tu negocio necesita.
+          </p>
+          <p class="mt-6 text-sm leading-relaxed text-muted">
+            Sin complicaciones innecesarias: primero entendemos el problema y
+            después decidimos qué hay que construir, con qué alcance y en qué orden.
+          </p>
+
+          <div class="mt-8 border-t hairline pt-8">
+            <p class="text-sm leading-relaxed text-bone/85">
+              Ayudamos a pequeñas y medianas empresas a convertir sus procesos
+              manuales en soluciones digitales escalables.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

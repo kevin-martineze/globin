@@ -1,0 +1,34 @@
+---
+/**
+ * Seamless ticker. The track is duplicated in the markup and motion.ts moves it
+ * -50%, which lands exactly on the start of the copy — that is what makes the
+ * loop seamless, so the duplicate is required, not decorative.
+ */
+interface Props {
+  items: readonly string[];
+  /** Seconds for one full loop. Higher is slower. */
+  speed?: number;
+  direction?: 'left' | 'right';
+}
+
+const { items, speed = 28, direction = 'left' } = Astro.props;
+const track = [...items, ...items];
+---
+
+<div
+  data-marquee={speed}
+  data-marquee-direction={direction}
+  class="mask-fade-x overflow-hidden border-y hairline py-6"
+  aria-hidden="true"
+>
+  <div data-marquee-track class="flex w-max items-center gap-10">
+    {
+      track.map((item) => (
+        <span class="display-tight flex items-center gap-10 text-xl whitespace-nowrap text-bone/70">
+          {item}
+          <span class="size-1.5 rounded-full bg-brand-accent" />
+        </span>
+      ))
+    }
+  </div>
+</div>

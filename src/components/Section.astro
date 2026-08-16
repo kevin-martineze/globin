@@ -1,0 +1,58 @@
+---
+/**
+ * The section shell every content block is built on: numbered eyebrow, an
+ * oversized split headline, optional intro, then the slot.
+ *
+ * Sections are numbered because the page is one long scroll with no visual
+ * chrome between blocks — the number is what tells you where you are. Keep the
+ * numbering contiguous in `index.astro`; a gap reads as a bug, not as a design.
+ */
+interface Props {
+  /** Anchor target. Must match the matching entry in `nav` (data/site.ts). */
+  id: string;
+  /** Two-digit order marker shown before the label, e.g. "01". */
+  index: string;
+  /** Eyebrow label — a noun, not a sentence. */
+  label: string;
+  /** Headline. Use `<br />` to control line breaks; SplitText animates per line. */
+  title?: string;
+  /** Optional standfirst under the headline. */
+  intro?: string;
+  /** Vertical rhythm. `tight` for stacked sections that belong together. */
+  space?: 'default' | 'tight';
+  class?: string;
+}
+
+const { id, index, label, title, intro, space = 'default', class: className } = Astro.props;
+---
+
+<section
+  id={id}
+  class:list={[
+    'relative',
+    space === 'tight' ? 'py-16 lg:py-24' : 'py-24 lg:py-40',
+    className,
+  ]}
+>
+  <div class="shell">
+    <div class="max-w-3xl">
+      <p class="eyebrow mb-5" data-reveal="fade">{index} — {label}</p>
+      {
+        title && (
+          <h2 class="display text-[clamp(2.4rem,6vw,5.5rem)] text-bone" data-split set:html={title} />
+        )
+      }
+      {
+        intro && (
+          <p class="mt-6 max-w-xl text-base leading-relaxed text-muted" data-reveal>
+            {intro}
+          </p>
+        )
+      }
+    </div>
+
+    <div class="mt-14">
+      <slot />
+    </div>
+  </div>
+</section>

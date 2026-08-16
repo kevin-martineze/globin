@@ -1,0 +1,172 @@
+---
+import { site } from '../data/site';
+import { services } from '../data/services';
+
+/**
+ * Contact form that never posts anywhere.
+ *
+ * The site is static output — there is no server to receive a POST, and adding
+ * a third-party form service would mean a new dependency, a new privacy
+ * surface, and a new place for a lead to get lost. Instead the form composes a
+ * message from the fields and hands it to WhatsApp (or to the mail client), so
+ * the conversation starts in the channel the client already watches and nothing
+ * is stored anywhere in between.
+ *
+ * That also means the form cannot silently fail: if the message does not open,
+ * the visitor sees it immediately rather than trusting a "gracias" screen that
+ * went nowhere.
+ *
+ * Without JavaScript the form cannot compose anything, so the <noscript> block
+ * exposes the two channels directly — never a dead form.
+ */
+const whatsappBase = site.whatsapp ? `https://wa.me/${site.whatsapp}` : '';
+const mailBase = site.email ? `mailto:${site.email}` : '';
+---
+
+<form
+  data-contact-form
+  data-whatsapp={whatsappBase}
+  data-mail={mailBase}
+  class="card p-7 lg:p-9"
+  novalidate={false}
+>
+  <p class="eyebrow mb-7">Cuéntanos tu proyecto</p>
+
+  <div class="space-y-5">
+    <div class="grid gap-5 sm:grid-cols-2">
+      <label class="block">
+        <span class="mb-2 block text-xs tracking-wide text-muted">Nombre *</span>
+        <input
+          type="text"
+          name="nombre"
+          required
+          autocomplete="name"
+          placeholder="Cómo te llamas"
+          class="w-full rounded-xl border hairline bg-ink-950/60 px-4 py-3 text-sm text-bone transition-colors duration-300 placeholder:text-muted/60 hover:border-bone/25 focus:border-brand-accent focus:outline-none"
+        />
+      </label>
+
+      <label class="block">
+        <span class="mb-2 block text-xs tracking-wide text-muted">Empresa</span>
+        <input
+          type="text"
+          name="empresa"
+          autocomplete="organization"
+          placeholder="Opcional"
+          class="w-full rounded-xl border hairline bg-ink-950/60 px-4 py-3 text-sm text-bone transition-colors duration-300 placeholder:text-muted/60 hover:border-bone/25 focus:border-brand-accent focus:outline-none"
+        />
+      </label>
+    </div>
+
+    <label class="block">
+      <span class="mb-2 block text-xs tracking-wide text-muted">¿Qué necesitas?</span>
+      <select
+        name="servicio"
+        class="w-full appearance-none rounded-xl border hairline bg-ink-950/60 px-4 py-3 text-sm text-bone transition-colors duration-300 hover:border-bone/25 focus:border-brand-accent focus:outline-none"
+      >
+        {/* "Todavía no lo tengo claro" first and selected: the brief points out
+            that many visitors do not yet know what they need, and a required
+            choice would turn them away at the first field. */}
+        <option value="Todavía no lo tengo claro">Todavía no lo tengo claro</option>
+        {services.map((service) => <option value={service.name}>{service.name}</option>)}
+        <option value="Otra cosa">Otra cosa</option>
+      </select>
+    </label>
+
+    <label class="block">
+      <span class="mb-2 block text-xs tracking-wide text-muted">Cuéntanos un poco más *</span>
+      <textarea
+        name="mensaje"
+        required
+        rows="4"
+        placeholder="Qué problema quieres resolver, o qué te gustaría construir."
+        class="w-full resize-y rounded-xl border hairline bg-ink-950/60 px-4 py-3 text-sm leading-relaxed text-bone transition-colors duration-300 placeholder:text-muted/60 hover:border-bone/25 focus:border-brand-accent focus:outline-none"
+      ></textarea>
+    </label>
+  </div>
+
+  <div class="mt-7 flex flex-wrap gap-3">
+    <button
+      type="submit"
+      name="canal"
+      value="whatsapp"
+      class="group relative flex-1 overflow-hidden rounded-full bg-brand-accent px-6 py-3.5 text-sm font-medium text-ink-950"
+    >
+      <span
+        class="absolute inset-0 -translate-y-full bg-bone transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0"
+      ></span>
+      <span class="relative">Enviar por WhatsApp</span>
+    </button>
+
+    <button
+      type="submit"
+      name="canal"
+      value="correo"
+      class="rounded-full border hairline px-6 py-3.5 text-sm text-bone transition-colors duration-300 hover:border-bone"
+    >
+      Enviar por correo
+    </button>
+  </div>
+
+  <p class="mt-5 text-xs leading-relaxed text-muted">
+    El formulario no envía nada por su cuenta: arma el mensaje y lo abre en
+    WhatsApp o en tu correo para que lo revises antes de mandarlo. No guardamos
+    ningún dato.
+  </p>
+
+  <noscript>
+    <p class="mt-5 rounded-xl border border-brand-spark/40 bg-brand-spark/[0.08] px-5 py-4 text-xs leading-relaxed text-bone/85">
+      Este formulario necesita JavaScript para armar el mensaje. Escríbenos
+      directo por
+      {' '}<a href={whatsappBase} class="text-brand-accent underline">WhatsApp</a>{' '}
+      o a <a href={mailBase} class="text-brand-accent underline">{site.email}</a>.
+    </p>
+  </noscript>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+
+  /** The message the client receives. Plain text: WhatsApp has no formatting. */
+  function buildMessage(data: FormData) {
+    const nombre = String(data.get('nombre') ?? '').trim();
+    const empresa = String(data.get('empresa') ?? '').trim();
+    const servicio = String(data.get('servicio') ?? '').trim();
+    const mensaje = String(data.get('mensaje') ?? '').trim();
+
+    const presentacion = empresa ? `Soy ${nombre}, de ${empresa}.` : `Soy ${nombre}.`;
+
+    return [`Hola Globin.`, presentacion, `Me interesa: ${servicio}`, '', mensaje].join('\n');
+  }
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    // Native validation still runs the browser's own error bubbles, which are
+    // localised and screen-reader aware — no reason to reimplement them.
+    if (!form.reportValidity()) return;
+
+    const data = new FormData(form);
+    const message = encodeURIComponent(buildMessage(data));
+
+    // `submitter` tells us which of the two buttons was pressed. Keyboard
+    // submission (Enter in a field) reports none, so WhatsApp is the default —
+    // it is the primary action and the one the brief asks for.
+    const submitter = (event as SubmitEvent).submitter as HTMLButtonElement | null;
+    const canal = submitter?.value === 'correo' ? 'correo' : 'whatsapp';
+
+    if (canal === 'correo') {
+      const mail = form.dataset.mail;
+      if (!mail) return;
+      const subject = encodeURIComponent('Quiero contarles sobre mi proyecto');
+      window.location.href = `${mail}?subject=${subject}&body=${message}`;
+      return;
+    }
+
+    const whatsapp = form.dataset.whatsapp;
+    if (!whatsapp) return;
+    // Opened from inside the submit handler, so it counts as a user gesture and
+    // pop-up blockers leave it alone.
+    window.open(`${whatsapp}?text=${message}`, '_blank', 'noopener');
+  });
+</script>

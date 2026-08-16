@@ -1,0 +1,101 @@
+---
+import { site, whatsappLink, mailtoLink } from '../data/site';
+import ContactForm from './ContactForm.astro';
+
+/**
+ * Closing CTA, and the anchor every "Cuéntanos tu proyecto" button points at.
+ *
+ * Two ways in, side by side on purpose: the form for the visitor who wants to
+ * think before writing, and the direct channels for the one who would rather
+ * just open a chat. Making the form the only route would cost the second kind.
+ */
+const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.');
+const mailto = mailtoLink('Quiero contarles sobre mi proyecto');
+---
+
+<section id="contacto" class="grain relative overflow-hidden py-24 lg:py-36">
+  <div
+    class="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(90%_120%_at_80%_110%,var(--color-brand-mid)_0%,var(--color-brand-core)_38%,var(--color-ink-950)_74%)]"
+  >
+  </div>
+  <div class="pointer-events-none absolute inset-0 -z-10 grid-lines opacity-30"></div>
+
+  <div class="shell">
+    <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-6">
+        <p class="eyebrow mb-6" data-reveal="fade">07 — Siguiente paso</p>
+
+        <h2 class="display text-glow text-[clamp(2.1rem,4.6vw,4rem)] text-bone" data-split>
+          ¿Tienes una idea,<br />un problema o un proceso<br />que quieras mejorar?
+        </h2>
+
+        <p class="mt-8 max-w-xl text-lg leading-relaxed text-muted" data-reveal>
+          Cuéntanos qué necesitas y te ayudamos a identificar el siguiente paso.
+          La evaluación inicial no compromete a nada.
+        </p>
+
+        <div class="mt-10 space-y-px overflow-hidden rounded-2xl border hairline" data-reveal>
+          {
+            whatsapp && (
+              <a
+                href={whatsapp}
+                target="_blank"
+                rel="noopener"
+                class="group flex items-center justify-between gap-4 border-b hairline bg-ink-900/40 px-6 py-5 transition-colors duration-300 last:border-0 hover:bg-ink-800/60"
+              >
+                <span class="flex flex-col gap-1">
+                  <span class="font-mono text-[0.7rem] tracking-[0.2em] text-muted uppercase">
+                    WhatsApp
+                  </span>
+                  <span class="text-sm text-bone">{site.phone}</span>
+                </span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  aria-hidden="true"
+                  class="shrink-0 text-brand-accent transition-transform duration-300 group-hover:translate-x-1"
+                >
+                  <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+              </a>
+            )
+          }
+
+          {
+            mailto && (
+              <a
+                href={mailto}
+                class="group flex items-center justify-between gap-4 bg-ink-900/40 px-6 py-5 transition-colors duration-300 hover:bg-ink-800/60"
+              >
+                <span class="flex flex-col gap-1">
+                  <span class="font-mono text-[0.7rem] tracking-[0.2em] text-muted uppercase">
+                    Correo
+                  </span>
+                  <span class="text-sm break-all text-bone">{site.email}</span>
+                </span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  aria-hidden="true"
+                  class="shrink-0 text-brand-accent transition-transform duration-300 group-hover:translate-x-1"
+                >
+                  <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+              </a>
+            )
+          }
+        </div>
+
+        <p class="mt-8 text-sm text-muted">{site.coverage}</p>
+      </div>
+
+      <div class="lg:col-span-6" data-reveal data-reveal-delay="0.1">
+        <ContactForm />
+      </div>
+    </div>
+  </div>
+</section>

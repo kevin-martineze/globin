@@ -1,0 +1,45 @@
+---
+import Section from './Section.astro';
+import { faq } from '../data/faq';
+
+/**
+ * Native `<details>`, not a scripted accordion: it opens with JavaScript
+ * disabled, it is keyboard-operable and screen-reader-announced for free, and
+ * browser find-in-page can reach the closed answers. The `name` attribute makes
+ * the group exclusive without a line of script.
+ *
+ * The `source` field on each entry is intentionally not rendered — it exists so
+ * a reviewer can trace every answer back to the brief.
+ */
+---
+
+<Section
+  id="preguntas"
+  index="06"
+  label="Preguntas frecuentes"
+  title="Lo que suelen<br />preguntarnos"
+>
+  <div class="max-w-3xl border-t hairline">
+    {
+      faq.map((item, index) => (
+        <details name="faq" class="group border-b hairline" data-reveal data-reveal-delay={index * 0.04}>
+          <summary class="flex cursor-pointer list-none items-start gap-6 py-6 text-left [&::-webkit-details-marker]:hidden">
+            <span class="display-tight flex-1 text-lg text-bone transition-colors duration-300 group-hover:text-brand-accent lg:text-xl">
+              {item.question}
+            </span>
+            <span
+              class="mt-1 grid size-7 shrink-0 place-items-center rounded-full border hairline text-bone/70 transition-transform duration-500 ease-[var(--ease-out-expo)] group-open:rotate-45 group-open:border-brand-accent/50 group-open:text-brand-accent"
+              aria-hidden="true"
+            >
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.4" />
+              </svg>
+            </span>
+          </summary>
+
+          <p class="max-w-2xl pb-7 text-sm leading-relaxed text-muted">{item.answer}</p>
+        </details>
+      ))
+    }
+  </div>
+</Section>

@@ -1,0 +1,102 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+import { services } from '../data/services';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Internal pages (the style guide) that should stay out of search results. */
+  noindex?: boolean;
+}
+
+const { title, description = site.description, noindex = false } = Astro.props;
+const pageTitle = title
+  ? `${title} — ${site.name}`
+  : site.tagline
+    ? `${site.name} — ${site.tagline}`
+    : site.name;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+// Built from the logo by scripts/build-brand-assets.mjs. Absolute URL: the
+// scrapers that read this tag do not resolve relative paths.
+const ogImage = new URL('/og-image.png', Astro.site ?? Astro.url).href;
+
+// ProfessionalService is the closest honest type for a software firm that sells
+// services rather than a product. Only properties the brief supports are set:
+// structured data that overstates what the business is gets flagged, and there
+// is no aggregateRating or review to claim while the company has no clients yet.
+// Ternaries rather than `&&`: an empty string is falsy but is not an object, so
+// `'' && {…}` spreads a string and TypeScript rejects it.
+const sameAs = Object.values(site.social).filter(Boolean);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: site.name,
+  url: canonical.origin,
+  // Country only — see the note on `country` in src/data/site.ts. A locality
+  // here would contradict a page that never names one, and Google reads the
+  // two together.
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'CO',
+  },
+  areaServed: 'Worldwide',
+  knowsAbout: services.map((service) => service.name),
+  ...(site.description ? { description: site.description } : {}),
+  ...(site.email ? { email: site.email } : {}),
+  ...(site.phone ? { telephone: site.phone } : {}),
+  ...(site.tagline ? { slogan: site.tagline } : {}),
+  ...(sameAs.length ? { sameAs } : {}),
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="canonical" href={canonical.href} />
+    <title>{pageTitle}</title>
+    {description && <meta name="description" content={description} />}
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <!-- Matches --color-ink-950, which is the logo's own backdrop colour. -->
+    <meta name="theme-color" content="#091016" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[999] focus:rounded-full focus:bg-bone focus:px-5 focus:py-2 focus:text-sm focus:font-medium focus:text-ink-950"
+    >
+      Saltar al contenido
+    </a>
+
+    <Header />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      import '../lib/motion';
+    </script>
+  </body>
+</html>

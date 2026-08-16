@@ -1,0 +1,66 @@
+---
+import { phases, processIntro } from '../data/process';
+
+/**
+ * The method as a pinned horizontal rail (`data-rail` in motion.ts): on desktop
+ * the section holds still while the four phases travel sideways, which makes
+ * the sequence physical instead of just numbered.
+ *
+ * Below 1024px the rail is never pinned — it stays a plain swipeable list with
+ * scroll snapping, which is what a phone expects and costs no extra code.
+ */
+---
+
+<section
+  id="proceso"
+  data-rail
+  class="relative flex flex-col justify-center overflow-hidden py-24 lg:min-h-screen lg:py-0"
+>
+  <div class="pointer-events-none absolute inset-0 -z-10 grid-lines mask-fade-b opacity-25"></div>
+
+  <div class="shell">
+    <div class="max-w-3xl">
+      <p class="eyebrow mb-5" data-reveal="fade">04 — Proceso</p>
+      <h2 class="display text-[clamp(2.2rem,5.5vw,4.6rem)] text-bone" data-split>
+        De la idea<br />al producto
+      </h2>
+      <p class="mt-6 max-w-xl text-base leading-relaxed text-muted" data-reveal>
+        {processIntro}
+      </p>
+    </div>
+  </div>
+
+  <div
+    data-rail-track
+    class="mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-[var(--gutter)] pb-4 lg:mt-20 lg:snap-none lg:overflow-visible lg:pb-0"
+  >
+    {
+      phases.map((phase) => (
+        <article class="card flex w-[82vw] max-w-[24rem] shrink-0 snap-start flex-col p-8 lg:w-[26rem] lg:max-w-none lg:p-10">
+          <div class="flex items-center gap-4">
+            <span class="font-mono text-xs text-brand-accent">{phase.index}</span>
+            <span class="h-px flex-1 bg-[var(--edge)]" aria-hidden="true" />
+          </div>
+
+          <h3 class="display-tight mt-7 text-[1.7rem] text-bone">{phase.title}</h3>
+          <p class="mt-5 flex-1 text-sm leading-relaxed text-muted">{phase.body}</p>
+
+          {/* The brief's original eight stages, kept visible under the summary so
+              the simplification never hides the method. */}
+          <ul class="mt-8 flex flex-wrap gap-2 border-t hairline pt-6">
+            {phase.stages.map((stage) => (
+              <li class="rounded-full border hairline px-3.5 py-1.5 font-mono text-[0.68rem] tracking-wide text-bone/60">
+                {stage}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+  </div>
+
+  <p class="shell mt-10 max-w-xl text-xs leading-relaxed text-muted lg:mt-12">
+    Adaptamos el marco de trabajo al tamaño de cada proyecto. En proyectos
+    pequeños, un proceso más simple suele ser la mejor decisión.
+  </p>
+</section>

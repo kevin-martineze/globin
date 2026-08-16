@@ -1,0 +1,193 @@
+---
+import { site, whatsappLink } from '../data/site';
+
+/**
+ * Hero.
+ *
+ * The brand has a logo but no photography, so the backdrop is built rather than
+ * shot: a radial brand gradient, the engineering grid, a node graph, and grain
+ * on top. That is the brief's visual direction (§11) — geometric shapes and
+ * connection lines, used with restraint — and it also means the hero has no
+ * asset to wait on.
+ *
+ * If art direction later supplies an image or a loop, it drops inside
+ * `[data-hero-media]`; motion.ts scales that element and darkens
+ * `[data-hero-veil]` on scroll regardless of what is inside.
+ */
+const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.');
+
+// Node graph. Coordinates are hand-placed on a 100x100 viewBox so the shape
+// stays deliberate — a random scatter reads as decoration, a sparse deliberate
+// one reads as a system diagram, which is the point.
+const nodes = [
+  { x: 12, y: 26 },
+  { x: 34, y: 14 },
+  { x: 30, y: 52 },
+  { x: 55, y: 34 },
+  { x: 72, y: 18 },
+  { x: 68, y: 62 },
+  { x: 88, y: 44 },
+  { x: 48, y: 78 },
+];
+const links: Array<[number, number]> = [
+  [0, 1],
+  [0, 2],
+  [1, 3],
+  [2, 3],
+  [3, 4],
+  [3, 5],
+  [4, 6],
+  [5, 6],
+  [2, 7],
+  [5, 7],
+];
+---
+
+<section
+  data-hero
+  class="grain relative flex min-h-[92svh] items-end overflow-hidden pt-36 pb-16 lg:min-h-screen lg:pb-24"
+>
+  <div data-hero-media class="pointer-events-none absolute inset-0 -z-20">
+    <div
+      class="size-full bg-[radial-gradient(110%_85%_at_15%_-10%,var(--color-brand-mid)_0%,var(--color-brand-core)_34%,var(--color-ink-950)_72%)]"
+    >
+    </div>
+
+    <div class="mask-fade-b absolute inset-0 grid-lines opacity-40"></div>
+
+    <!-- Node graph, top-right, behind the headline and well outside its column. -->
+    <svg
+      class="absolute -top-10 right-0 h-[70%] w-[62%] opacity-70 lg:opacity-100"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="xMidYMid slice"
+      fill="none"
+      aria-hidden="true"
+    >
+      {
+        links.map(([a, b], i) => (
+          <line
+            x1={nodes[a].x}
+            y1={nodes[a].y}
+            x2={nodes[b].x}
+            y2={nodes[b].y}
+            stroke="currentColor"
+            stroke-width="0.18"
+            class="text-brand-accent/35"
+            style={`--i:${i}`}
+          />
+        ))
+      }
+      {
+        nodes.map((node, i) => (
+          <circle
+            cx={node.x}
+            cy={node.y}
+            r="0.9"
+            class="node fill-brand-accent"
+            style={`animation-delay:${i * 0.35}s`}
+          />
+        ))
+      }
+    </svg>
+  </div>
+
+  <!-- Veil sits between backdrop and copy; motion.ts drives it to 0.9 on scroll
+       so the headline stays legible as the section leaves. -->
+  <div
+    data-hero-veil
+    class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-ink-950 via-ink-950/55 to-transparent opacity-70"
+  >
+  </div>
+
+  <div class="shell">
+    <div class="max-w-4xl">
+      <p class="eyebrow mb-7 flex flex-wrap items-center gap-3" data-reveal="fade">
+        <span class="inline-block size-1.5 rounded-full bg-brand-accent"></span>
+        Software y soluciones tecnológicas
+        <span class="text-bone/25">/</span>
+        Clientes en cualquier país
+      </p>
+
+      <h1 class="display text-glow text-[clamp(2.6rem,7.4vw,6.6rem)] text-bone" data-split>
+        Soluciones digitales<br />con <span class="text-brand-accent">ingenio</span> para<br />
+        hacer crecer tu negocio
+      </h1>
+
+      <p
+        class="mt-9 max-w-2xl text-lg leading-relaxed text-muted"
+        data-reveal
+        data-reveal-delay="0.1"
+      >
+        En Globin diseñamos y desarrollamos software, aplicaciones móviles,
+        automatizaciones y soluciones cloud adaptadas a las necesidades reales de tu empresa.
+      </p>
+
+      <div class="mt-11 flex flex-wrap gap-4" data-reveal data-reveal-delay="0.2">
+        <a
+          href={site.ctaHref}
+          class="group relative overflow-hidden rounded-full bg-brand-accent px-7 py-4 text-sm font-medium text-ink-950"
+        >
+          <span
+            class="absolute inset-0 -translate-y-full bg-bone transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0"
+          ></span>
+          <span class="relative">{site.cta}</span>
+        </a>
+
+        {/* The secondary CTA is WhatsApp when a number exists. Until it does, the
+            brief's informative CTA takes the slot rather than a dead button. */}
+        {
+          whatsapp ? (
+            <a
+              href={whatsapp}
+              target="_blank"
+              rel="noopener"
+              class="rounded-full border hairline px-7 py-4 text-sm text-bone transition-colors duration-300 hover:border-bone"
+            >
+              {site.ctaSecondary}
+            </a>
+          ) : (
+            <a
+              href="#servicios"
+              class="rounded-full border hairline px-7 py-4 text-sm text-bone transition-colors duration-300 hover:border-bone"
+            >
+              Conocer nuestros servicios
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="pointer-events-none absolute right-[var(--gutter)] bottom-10 hidden items-center gap-3 lg:flex"
+    aria-hidden="true"
+  >
+    <span class="eyebrow">{site.tagline}</span>
+    <span class="block h-12 w-px bg-gradient-to-b from-brand-accent/60 to-transparent"></span>
+  </div>
+</section>
+
+<style>
+  /* Slow, low-amplitude pulse, deliberately below the threshold where it would
+     compete with the headline. The reduced-motion rule in global.css stops it.
+     Scale rather than the `r` attribute: `r` as a CSS property is still not
+     animatable everywhere, and `transform-box: fill-box` makes the scale happen
+     around the node instead of around the SVG origin. */
+  .node {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: node-pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes node-pulse {
+    0%,
+    100% {
+      opacity: 0.4;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.25);
+    }
+  }
+</style>

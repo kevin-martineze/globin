@@ -1,0 +1,12 @@
+# pnpm blocks dependency build scripts until they are named here.
+#
+# esbuild's postinstall is what puts the platform binary in place, and Vite will
+# not start without it. `allowBuilds:` is the newer spelling of this field;
+# `onlyBuiltDependencies` is what pnpm 10.18 — the version that runs here —
+# understands, so it is the one used.
+#
+# Gotcha: pnpm caches the decision in node_modules/.modules.yaml under
+# `ignoredBuilds`, so editing this file is not enough on an existing install —
+# the warning survives until `pnpm install --force`.
+onlyBuiltDependencies:
+  - esbuild

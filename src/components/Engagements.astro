@@ -1,0 +1,55 @@
+---
+import Section from './Section.astro';
+import { engagements, engagementNote } from '../data/engagements';
+
+/**
+ * Two engagement models side by side. No prices anywhere: the brief is explicit
+ * that pricing is not published yet and that the page should ask for an
+ * evaluation instead — so the closing note explains *why* there is no figure,
+ * rather than leaving the reader to wonder.
+ */
+---
+
+<Section
+  id="modalidades"
+  index="05"
+  label="Modalidades"
+  title="Dos formas<br />de trabajar juntos"
+  intro="Un proyecto con inicio y final, o un acompañamiento continuo. Muchas empresas empiezan por el primero y siguen con el segundo."
+>
+  <div class="grid gap-5 lg:grid-cols-2">
+    {
+      engagements.map((engagement, index) => (
+        <article class="card flex flex-col p-8 lg:p-10" data-reveal data-reveal-delay={index * 0.1}>
+          <p class="font-mono text-[0.7rem] tracking-[0.2em] text-brand-accent/80 uppercase">
+            {engagement.kicker}
+          </p>
+          <h3 class="display-tight mt-4 text-3xl text-bone">{engagement.name}</h3>
+          <p class="mt-4 text-sm leading-relaxed text-muted">{engagement.summary}</p>
+
+          <ul class="mt-8 flex-1 space-y-3.5 border-t hairline pt-8">
+            {engagement.items.map((item) => (
+              <li class="flex gap-3 text-sm leading-relaxed text-bone/85">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  aria-hidden="true"
+                  class="mt-1 shrink-0 text-brand-accent"
+                >
+                  <path d="M1 7.5l4 4L13 2" stroke="currentColor" stroke-width="1.8" />
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+  </div>
+
+  <p class="mt-10 max-w-2xl text-sm leading-relaxed text-muted" data-reveal>
+    {engagementNote}
+  </p>
+</Section>

@@ -1,0 +1,192 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Section from '../components/Section.astro';
+import Marquee from '../components/Marquee.astro';
+
+/**
+ * Living style guide. It renders the real tokens and the real components, so it
+ * cannot drift from the site the way a screenshot in a document does — if the
+ * palette changes in global.css, this page changes with it.
+ *
+ * Not linked from anywhere and excluded from the sitemap + robots. Keep it that
+ * way: it is a tool for whoever builds the page, not a page for visitors.
+ */
+
+const surfaces = [
+  { token: 'ink-950', use: 'Fondo de página', class: 'bg-ink-950' },
+  { token: 'ink-900', use: 'Tarjetas sobre la página', class: 'bg-ink-900' },
+  { token: 'ink-800', use: 'Superficies elevadas y hover', class: 'bg-ink-800' },
+  { token: 'ink-700', use: 'Separadores sobre bloques sólidos', class: 'bg-ink-700' },
+];
+
+const brandColours = [
+  { token: 'brand-core', use: 'Verde profundo, base de los degradados', class: 'bg-brand-core' },
+  { token: 'brand-mid', use: 'Tono medio, arranque del degradado del hero', class: 'bg-brand-mid' },
+  { token: 'brand-accent', use: 'El color vibrante: CTA, iconos, nodos', class: 'bg-brand-accent' },
+  { token: 'brand-accent-bright', use: 'Anillo de foco y estados activos', class: 'bg-brand-accent-bright' },
+  { token: 'brand-spark', use: 'Plateado de las cintas: avisos y detalles', class: 'bg-brand-spark' },
+  { token: 'bone', use: 'Texto principal, botones invertidos', class: 'bg-bone' },
+  { token: 'muted', use: 'Texto secundario', class: 'bg-muted' },
+];
+
+const motionAttrs = [
+  { attr: 'data-split', effect: 'Headline lines rise out of a clipping mask' },
+  { attr: 'data-reveal="up|fade|scale|left"', effect: 'Enter animation; pair with data-reveal-delay' },
+  { attr: 'data-parallax="12"', effect: 'Scroll-linked drift; value is % of travel' },
+  { attr: 'data-marquee="30"', effect: 'Seamless ticker; track must be duplicated' },
+  { attr: 'data-rail', effect: 'Pinned horizontal scroll section (≥1024px only)' },
+  { attr: 'data-count="120"', effect: 'Number counts up when scrolled into view' },
+  { attr: 'data-autoplay-video', effect: 'Video plays only while on screen' },
+];
+---
+
+<Layout title="Sistema gráfico" description="Guía interna de estilo" noindex>
+  <div class="shell pt-36 pb-8">
+    <p class="eyebrow mb-5">Interno</p>
+    <h1 class="display text-[clamp(2.6rem,7vw,6rem)] text-bone">Sistema<br />gráfico</h1>
+    <p class="mt-6 max-w-xl text-base leading-relaxed text-muted">
+      Tokens, tipografía y componentes reales de la landing. La paleta está
+      muestreada del logo: el teal de la esfera (#389888) y el fondo sobre el que
+      fue renderado (#091016). El logo tiene dos colores y la paleta también.
+    </p>
+  </div>
+
+  <Section id="color" index="01" label="Color" title="Superficies y marca" space="tight">
+    <div class="space-y-10">
+      <div>
+        <p class="eyebrow mb-4">Superficies</p>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            surfaces.map((item) => (
+              <div class="overflow-hidden rounded-2xl border hairline">
+                <div class:list={['h-24 w-full', item.class]} />
+                <div class="p-4">
+                  <p class="display-tight text-sm text-bone">{item.token}</p>
+                  <p class="mt-1 text-xs leading-relaxed text-muted">{item.use}</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div>
+        <p class="eyebrow mb-4">Marca y texto</p>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            brandColours.map((item) => (
+              <div class="overflow-hidden rounded-2xl border hairline">
+                <div class:list={['h-24 w-full', item.class]} />
+                <div class="p-4">
+                  <p class="display-tight text-sm text-bone">{item.token}</p>
+                  <p class="mt-1 text-xs leading-relaxed text-muted">{item.use}</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <Section id="tipografia" index="02" label="Tipografía" title="Tres voces" space="tight">
+    <div class="space-y-10">
+      <div class="rounded-2xl border hairline p-8">
+        <p class="eyebrow mb-4">.display — titulares</p>
+        <p class="display text-[clamp(2.4rem,6vw,5rem)] text-bone">Archivo 800 · wdth 112</p>
+      </div>
+      <div class="rounded-2xl border hairline p-8">
+        <p class="eyebrow mb-4">.display-tight — títulos de tarjeta</p>
+        <p class="display-tight text-3xl text-bone">Archivo 700 · wdth 88</p>
+      </div>
+      <div class="rounded-2xl border hairline p-8">
+        <p class="eyebrow mb-4">.eyebrow — etiquetas de sección</p>
+        <p class="font-mono text-xs tracking-wide text-bone/60">
+          JetBrains Mono · solo microtexto: índices, etiquetas técnicas, avisos.
+          Nunca un párrafo.
+        </p>
+      </div>
+      <div class="rounded-2xl border hairline p-8">
+        <p class="eyebrow mb-4">Cuerpo — Inter</p>
+        <p class="max-w-xl text-base leading-relaxed text-muted">
+          El cuerpo va en Inter, tamaño base, <span class="text-bone">bone</span> para lo
+          principal y <span class="text-muted">muted</span> para lo secundario. Nada de
+          mayúsculas en párrafos: las mayúsculas son de la familia display.
+        </p>
+      </div>
+    </div>
+  </Section>
+
+  <Section id="componentes" index="03" label="Componentes" title="Piezas base" space="tight">
+    <div class="grid gap-5 lg:grid-cols-3">
+      <article class="card flex flex-col p-8">
+        <p class="font-mono text-[0.7rem] tracking-[0.2em] text-muted uppercase">Tarjeta</p>
+        <h3 class="display-tight mt-3 text-3xl text-bone">.card</h3>
+        <p class="mt-4 text-sm leading-relaxed text-muted">
+          Radio 1.5rem, borde hairline, fondo ink-900 al 60 %. En hover sube 4px y
+          el borde toma el acento. Definida una sola vez en global.css.
+        </p>
+      </article>
+
+      <article class="card flex flex-col border-brand-accent/40 bg-brand-accent/[0.06] p-8">
+        <p class="font-mono text-[0.7rem] tracking-[0.2em] text-muted uppercase">Tarjeta</p>
+        <h3 class="display-tight mt-3 text-3xl text-bone">Destacada</h3>
+        <p class="mt-4 text-sm leading-relaxed text-muted">
+          Misma tarjeta con borde y fondo teñidos con el acento. Dos como máximo
+          por grupo, o deja de destacar.
+        </p>
+      </article>
+
+      <div class="flex flex-col justify-center gap-4 rounded-[1.5rem] border hairline p-8">
+        <p class="display-tight text-xs tracking-[0.2em] text-muted">Botones</p>
+        <a
+          href="#componentes"
+          class="group relative overflow-hidden rounded-full bg-bone px-6 py-3.5 text-center text-sm font-medium text-ink-950"
+        >
+          <span class="absolute inset-0 -translate-y-full bg-brand-accent transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0"></span>
+          <span class="relative transition-colors duration-300 group-hover:text-bone">Primario</span>
+        </a>
+        <a
+          href="#componentes"
+          class="rounded-full border hairline px-6 py-3.5 text-center text-sm text-bone transition-colors duration-300 hover:border-bone"
+        >
+          Secundario
+        </a>
+      </div>
+    </div>
+  </Section>
+
+  <div class="py-8">
+    <Marquee items={['[Palabra]', '[Palabra]', '[Palabra]', '[Palabra]']} speed={32} />
+  </div>
+
+  <Section id="movimiento" index="04" label="Movimiento" title="Atributos" space="tight">
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[36rem] text-left text-sm">
+        <thead>
+          <tr class="border-b hairline">
+            <th class="eyebrow pb-4">Atributo</th>
+            <th class="eyebrow pb-4">Efecto</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            motionAttrs.map((row) => (
+              <tr class="border-b hairline last:border-0">
+                <td class="py-4 pr-6 align-top font-mono text-xs text-bone">{row.attr}</td>
+                <td class="py-4 align-top leading-relaxed text-muted">{row.effect}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p class="mt-8 max-w-xl text-sm leading-relaxed text-muted">
+      Todo vive en <span class="text-bone">src/lib/motion.ts</span>. Si el arranque
+      falla, se añade <span class="text-bone">no-motion</span> al &lt;html&gt; y todo
+      vuelve a ser visible: un fallo de animación nunca deja la página en blanco.
+      <span class="text-bone">prefers-reduced-motion</span> se respeta en todos los efectos.
+    </p>
+  </Section>
+</Layout>
