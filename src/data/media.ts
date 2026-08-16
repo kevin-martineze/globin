@@ -14,7 +14,6 @@
  * take `alt=""` plus `aria-hidden="true"` instead of a description.
  */
 import mark from '../assets/brand/globin-mark.png';
-import heroRibbons from '../assets/textures/hero-ribbons.jpg';
 import nodeGrid from '../assets/textures/node-grid.jpg';
 
 export type MediaEntry = {
@@ -37,23 +36,16 @@ export const brand = {
 } as const satisfies Record<string, MediaEntry>;
 
 /**
- * Generated backdrops. Both are purely decorative — they carry no information
- * the copy does not already state — so they ship with `alt=""` plus
- * `aria-hidden`, and the alt strings here stay empty on purpose.
+ * Generated backdrops. Decorative — they carry no information the copy does not
+ * already state — so they ship with `alt=""` plus `aria-hidden`, and the alt
+ * strings here stay empty on purpose.
  *
- * Both are 3D renders in the brand's own language: teal ribbons, silver
- * ribbons, a sparse node network. They are the one thing worth generating
- * rather than drawing in CSS — organic depth of field does not come out of a
- * gradient.
+ * A ribbon render for the hero was tried and dropped: the built backdrop it
+ * would have replaced (gradient, grid, animated node graph) reads better, and
+ * it costs no image weight. The render is kept in `media-source/gemini/` in
+ * case a section ever wants it.
  */
 export const textures = {
-  /**
-   * Hero backdrop, 1376x768. The left ~45% is deliberately empty so the
-   * headline sits on darkness rather than on ribbons. It upscales past its
-   * native width on large displays; the grain overlay and the veil hide it,
-   * and the subject is soft enough that no edge gives it away.
-   */
-  heroRibbons: { src: heroRibbons, alt: '' },
   /**
    * Node network, 1024x1024. Measured, it very nearly tiles but not exactly —
    * opposite edges differ about a third as much as two random columns do,
