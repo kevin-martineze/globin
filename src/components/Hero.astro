@@ -4,43 +4,27 @@ import { site, whatsappLink } from '../data/site';
 /**
  * Hero.
  *
- * The brand has a logo but no photography, so the backdrop is built rather than
- * shot: a radial brand gradient, the engineering grid, a node graph, and grain
- * on top. That is the brief's visual direction (§11) — geometric shapes and
- * connection lines, used with restraint — and it also means the hero has no
- * asset to wait on.
+ * The backdrop is built, not shot — there is no photography and none is coming.
+ * What it is built from matters, though: the first version used a centred glow
+ * plus a scattered node mesh, which is the exact backdrop every AI image
+ * generator produces and every dark SaaS template ships. Recognisable as a
+ * genre, not as Globin.
  *
- * If art direction later supplies an image or a loop, it drops inside
- * `[data-hero-media]`; motion.ts scales that element and darkens
- * `[data-hero-veil]` on scroll regardless of what is inside.
+ * This one draws the logo instead. The mark is a sphere with two ribbons
+ * orbiting it and ending in arrowheads; the backdrop is those orbits at
+ * architectural scale, tilted into perspective and turning slowly in opposite
+ * directions. Same idea, brand-specific geometry — nothing about it could be
+ * dropped onto another company's site.
+ *
+ * The other change is the grid: column rules rather than graph paper. Twelve
+ * verticals read as a layout structure, which is what a designed page has, and
+ * they line up with the type instead of sitting behind it as texture.
+ *
+ * motion.ts scales `[data-hero-media]` and darkens `[data-hero-veil]` on
+ * scroll; if art direction ever supplies an image or a loop, it drops inside
+ * the media element and neither has to change.
  */
 const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.');
-
-// Node graph. Coordinates are hand-placed on a 100x100 viewBox so the shape
-// stays deliberate — a random scatter reads as decoration, a sparse deliberate
-// one reads as a system diagram, which is the point.
-const nodes = [
-  { x: 12, y: 26 },
-  { x: 34, y: 14 },
-  { x: 30, y: 52 },
-  { x: 55, y: 34 },
-  { x: 72, y: 18 },
-  { x: 68, y: 62 },
-  { x: 88, y: 44 },
-  { x: 48, y: 78 },
-];
-const links: Array<[number, number]> = [
-  [0, 1],
-  [0, 2],
-  [1, 3],
-  [2, 3],
-  [3, 4],
-  [3, 5],
-  [4, 6],
-  [5, 6],
-  [2, 7],
-  [5, 7],
-];
 ---
 
 <section
@@ -48,46 +32,81 @@ const links: Array<[number, number]> = [
   class="grain relative flex min-h-[92svh] items-end overflow-hidden pt-36 pb-16 lg:min-h-screen lg:pb-24"
 >
   <div data-hero-media class="pointer-events-none absolute inset-0 -z-20">
+    <!-- Brand wash anchored off-canvas at the top-left corner. Off-canvas is the
+         point: a gradient whose centre you can find reads as a glow, and a glow
+         is the tell. -->
     <div
-      class="size-full bg-[radial-gradient(110%_85%_at_15%_-10%,var(--color-brand-mid)_0%,var(--color-brand-core)_34%,var(--color-ink-950)_72%)]"
+      class="absolute inset-0 bg-[radial-gradient(125%_105%_at_-12%_-18%,var(--color-brand-mid)_0%,var(--color-brand-core)_28%,transparent_62%)]"
     >
     </div>
 
-    <div class="mask-fade-b absolute inset-0 grid-lines opacity-40"></div>
+    <!-- Twelve column rules, aligned to the shell so they land on the type. -->
+    <div class="column-rules mask-fade-b absolute inset-0"></div>
 
-    <!-- Node graph, top-right, behind the headline and well outside its column. -->
+    <!-- Orbits: the logo's two ribbons at architectural scale. -->
+    {/* Parked in the upper right. The section is bottom-aligned, so the
+        headline occupies the lower left — the orbits stay out of its way
+        instead of crossing the type. */}
     <svg
-      class="absolute -top-10 right-0 h-[70%] w-[62%] opacity-70 lg:opacity-100"
+      class="orbits absolute top-[2%] right-[-16%] h-[62%] w-[82%] opacity-80 lg:right-[-7%] lg:h-[76%] lg:w-[48%] lg:opacity-100"
       viewBox="0 0 100 100"
-      preserveAspectRatio="xMidYMid slice"
       fill="none"
       aria-hidden="true"
     >
-      {
-        links.map(([a, b], i) => (
-          <line
-            x1={nodes[a].x}
-            y1={nodes[a].y}
-            x2={nodes[b].x}
-            y2={nodes[b].y}
-            stroke="currentColor"
-            stroke-width="0.18"
-            class="text-brand-accent/35"
-            style={`--i:${i}`}
+      <defs>
+        <marker
+          id="orbit-arrow-teal"
+          viewBox="0 0 10 10"
+          refX="6"
+          refY="5"
+          markerWidth="5"
+          markerHeight="5"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 1.5 L8 5 L0 8.5 z" fill="currentColor" class="text-brand-accent" />
+        </marker>
+        <marker
+          id="orbit-arrow-bone"
+          viewBox="0 0 10 10"
+          refX="6"
+          refY="5"
+          markerWidth="5"
+          markerHeight="5"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 1.5 L8 5 L0 8.5 z" fill="currentColor" class="text-bone/45" />
+        </marker>
+      </defs>
+
+      <!-- The sphere the ribbons wrap: a hairline, never a filled shape. -->
+      <circle cx="50" cy="50" r="30" class="stroke-bone/[0.07]" stroke-width="0.25" />
+      <circle cx="50" cy="50" r="44" class="stroke-bone/[0.04]" stroke-width="0.25" />
+
+      {/* Each orbit is tilted by a static outer group and turned by an inner one,
+          so the perspective holds still while the ribbon travels around it. */}
+      <g class="tilt-a">
+        <g class="spin-a">
+          <path
+            d="M 80 50 A 30 30 0 1 1 34.6 24.0"
+            class="stroke-brand-accent/55"
+            stroke-width="0.5"
+            stroke-linecap="round"
+            marker-end="url(#orbit-arrow-teal)"
           />
-        ))
-      }
-      {
-        nodes.map((node, i) => (
-          <circle
-            cx={node.x}
-            cy={node.y}
-            r="0.9"
-            class="node fill-brand-accent"
-            style={`animation-delay:${i * 0.35}s`}
+        </g>
+      </g>
+
+      <g class="tilt-b">
+        <g class="spin-b">
+          <path
+            d="M 20 50 A 30 30 0 1 1 65.4 76.0"
+            class="stroke-bone/25"
+            stroke-width="0.4"
+            stroke-linecap="round"
+            marker-end="url(#orbit-arrow-bone)"
           />
-        ))
-      }
+        </g>
+      </g>
     </svg>
   </div>
 
@@ -168,26 +187,70 @@ const links: Array<[number, number]> = [
 </section>
 
 <style>
-  /* Slow, low-amplitude pulse, deliberately below the threshold where it would
-     compete with the headline. The reduced-motion rule in global.css stops it.
-     Scale rather than the `r` attribute: `r` as a CSS property is still not
-     animatable everywhere, and `transform-box: fill-box` makes the scale happen
-     around the node instead of around the SVG origin. */
-  .node {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: node-pulse 4s ease-in-out infinite;
+  /* Twelve columns matching `.shell`, so the rules fall between the words
+     instead of across them. `background-size` does the division: percentages in
+     a repeating gradient would repeat over the element, not the container. */
+  .column-rules {
+    --cols: 12;
+    max-width: 96rem;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    background-image: linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-bone) 7%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: calc(100% / var(--cols)) 100%;
+    /* Both, and in this order: `origin` makes the 1/12 division measure the
+       content box (the same width `.shell` gives the type), `clip` stops the
+       rules bleeding into the gutter. Clip alone would size off the padding box
+       and the columns would drift out of step with the layout. */
+    background-origin: content-box;
+    background-clip: content-box;
+    opacity: 0.9;
   }
 
-  @keyframes node-pulse {
-    0%,
-    100% {
-      opacity: 0.4;
-      transform: scale(0.8);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.25);
+  @media (max-width: 768px) {
+    /* Twelve rules on a phone is hatching, not structure. */
+    .column-rules {
+      --cols: 4;
     }
   }
+
+  /* The orbits. Tilt is static; only the inner group turns, which is what makes
+     the ribbon look like it is travelling around a sphere rather than a flat
+     circle spinning in place.
+
+     `transform-box: view-box` is required for the rotation to happen around the
+     viewBox centre instead of the path's own bounding box. */
+  .orbits g {
+    transform-box: view-box;
+    transform-origin: 50px 50px;
+  }
+
+  .tilt-a {
+    transform: rotate(-24deg) scaleY(0.46);
+  }
+  .tilt-b {
+    transform: rotate(28deg) scaleY(0.38);
+  }
+
+  /* Slow enough to be noticed only on a second look. Two speeds and two
+     directions, so the pair never falls into step and starts reading as a
+     loading spinner. */
+  .spin-a {
+    animation: orbit 68s linear infinite;
+  }
+  .spin-b {
+    animation: orbit 96s linear infinite reverse;
+  }
+
+  @keyframes orbit {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* The global reduced-motion rule collapses animation duration to ~0, which
+     freezes these mid-turn — fine, since the still frame is the composition. */
 </style>
