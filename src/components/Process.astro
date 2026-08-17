@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import Dual from './Dual.astro';
 import { phases, processIntro } from '../data/process';
 import { textures } from '../data/media';
 
@@ -35,13 +36,15 @@ import { textures } from '../data/media';
 
   <div class="shell">
     <div class="max-w-3xl">
-      <p class="eyebrow mb-5" data-reveal="fade">04 — Proceso</p>
-      <h2 class="display text-[clamp(2.2rem,5.5vw,4.6rem)] text-bone" data-split>
+      <p class="eyebrow mb-6" data-reveal="fade">Proceso</p>
+      <h2 class="display text-[clamp(2.1rem,4.6vw,4.2rem)] text-bone" data-split>
         De la idea<br />al producto
       </h2>
-      <p class="mt-6 max-w-xl text-base leading-relaxed text-muted" data-reveal>
-        {processIntro}
-      </p>
+      <Dual
+        text={processIntro}
+        as="p"
+        class="mt-6 max-w-xl text-base leading-relaxed text-muted"
+      />
     </div>
   </div>
 
@@ -58,7 +61,7 @@ import { textures } from '../data/media';
           </div>
 
           <h3 class="display-tight mt-7 text-[1.7rem] text-bone">{phase.title}</h3>
-          <p class="mt-5 flex-1 text-sm leading-relaxed text-muted">{phase.body}</p>
+          <Dual text={phase.body} as="p" class="mt-5 flex-1 text-sm leading-relaxed text-muted" />
 
           {/* The brief's original eight stages, kept visible under the summary so
               the simplification never hides the method. */}

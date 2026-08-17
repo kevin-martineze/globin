@@ -106,3 +106,21 @@ export const nav: ReadonlyArray<{ label: string; href: string }> = [
   { label: 'Modalidades', href: '#modalidades' },
   { label: 'Preguntas', href: '#preguntas' },
 ];
+
+/**
+ * Every section on the page, in order, for the index rail that tracks scroll.
+ *
+ * A superset of `nav`: the rail is a map of where you are, so it lists blocks
+ * the header menu has no room for. Both lists point at the same `id`s, and an
+ * entry here without a matching section leaves a rail item that never lights up.
+ */
+export const sections: ReadonlyArray<{ label: string; href: string }> = [
+  { label: 'Inicio', href: '#inicio' },
+  { label: 'Enfoque', href: '#enfoque' },
+  { label: 'Servicios', href: '#servicios' },
+  { label: 'Compromisos', href: '#diferenciadores' },
+  { label: 'Proceso', href: '#proceso' },
+  { label: 'Modalidades', href: '#modalidades' },
+  { label: 'Preguntas', href: '#preguntas' },
+  { label: 'Contacto', href: '#contacto' },
+];

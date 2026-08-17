@@ -1,57 +1,67 @@
 ---
+import Dual from './Dual.astro';
+import type { Dual as DualText } from '../data/dual';
+
 /**
- * The section shell every content block is built on: numbered eyebrow, an
- * oversized split headline, optional intro, then the slot.
+ * The section shell.
  *
- * Sections are numbered because the page is one long scroll with no visual
- * chrome between blocks — the number is what tells you where you are. Keep the
- * numbering contiguous in `index.astro`; a gap reads as a bug, not as a design.
+ * The numbered eyebrow that used to open every block is gone — the fixed index
+ * rail carries the running order now, and printing it twice was the loudest
+ * thing this layout had borrowed from elsewhere.
+ *
+ * What replaces it is the grid: a narrow label column and a wide content
+ * column, offset from each other. Headings sit in the wide column and the label
+ * hangs in the margin beside them, which is how a reference book sets a
+ * section and not how a landing template does.
  */
 interface Props {
-  /** Anchor target. Must match the matching entry in `nav` (data/site.ts). */
+  /** Anchor target. Must match an entry in `sections` (data/site.ts). */
   id: string;
-  /** Two-digit order marker shown before the label, e.g. "01". */
-  index: string;
-  /** Eyebrow label — a noun, not a sentence. */
+  /** Margin label — a noun, not a sentence. */
   label: string;
-  /** Headline. Use `<br />` to control line breaks; SplitText animates per line. */
+  /** Headline. `<br />` allowed; SplitText animates per line. */
   title?: string;
-  /** Optional standfirst under the headline. */
-  intro?: string;
+  /** Optional standfirst, in both registers. */
+  intro?: DualText;
   /** Vertical rhythm. `tight` for stacked sections that belong together. */
   space?: 'default' | 'tight';
   class?: string;
 }
 
-const { id, index, label, title, intro, space = 'default', class: className } = Astro.props;
+const { id, label, title, intro, space = 'default', class: className } = Astro.props;
 ---
 
 <section
   id={id}
-  class:list={[
-    'relative',
-    space === 'tight' ? 'py-16 lg:py-24' : 'py-24 lg:py-40',
-    className,
-  ]}
+  class:list={['relative', space === 'tight' ? 'py-16 lg:py-24' : 'py-24 lg:py-36', className]}
 >
   <div class="shell">
-    <div class="max-w-3xl">
-      <p class="eyebrow mb-5" data-reveal="fade">{index} — {label}</p>
-      {
-        title && (
-          <h2 class="display text-[clamp(2.4rem,6vw,5.5rem)] text-bone" data-split set:html={title} />
-        )
-      }
-      {
-        intro && (
-          <p class="mt-6 max-w-xl text-base leading-relaxed text-muted" data-reveal>
-            {intro}
-          </p>
-        )
-      }
+    <div class="grid gap-6 lg:grid-cols-12 lg:gap-10">
+      <p class="eyebrow lg:col-span-3 lg:pt-3" data-reveal="fade">{label}</p>
+
+      <div class="lg:col-span-9">
+        {
+          title && (
+            <h2
+              class="display max-w-[18ch] text-[clamp(2.1rem,4.6vw,4.2rem)] text-bone"
+              data-split
+              set:html={title}
+            />
+          )
+        }
+        {
+          intro && (
+            <Dual
+              text={intro}
+              as="p"
+              class="mt-6 max-w-2xl text-base leading-relaxed text-muted"
+            />
+          )
+        }
+      </div>
     </div>
 
-    <div class="mt-14">
+    <div class="mt-14 lg:mt-16">
       <slot />
     </div>
   </div>

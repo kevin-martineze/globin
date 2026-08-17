@@ -1,0 +1,26 @@
+---
+import type { Dual } from '../data/dual';
+
+/**
+ * Renders a piece of copy in both registers. CSS in global.css shows whichever
+ * one `<html data-register>` selects.
+ *
+ * Both versions are in the DOM rather than swapped by script on purpose: the
+ * switch then costs no request and no reflow surprise, the page still reads
+ * with JavaScript disabled, and both voices stay crawlable. The cost is a
+ * little duplicated markup, which is the cheapest thing here.
+ *
+ * `set:html` because headlines carry `<em>` and `<br />`.
+ */
+interface Props {
+  text: Dual;
+  /** Element to render. Defaults to a span so it can sit inline. */
+  as?: keyof HTMLElementTagNameMap;
+  class?: string;
+}
+
+const { text, as: Tag = 'span', class: className }: Props = Astro.props;
+---
+
+<Tag data-reg="simple" class={className} set:html={text.simple} />
+<Tag data-reg="tecnico" class={className} set:html={text.tecnico} />

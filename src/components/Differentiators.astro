@@ -1,6 +1,7 @@
 ---
 import Section from './Section.astro';
 import { differentiators } from '../data/differentiators';
+import { sectionIntros } from '../data/copy';
 
 /**
  * Five claims as full-width rows rather than cards: they are sentences, not
@@ -12,10 +13,9 @@ import { differentiators } from '../data/differentiators';
 
 <Section
   id="diferenciadores"
-  index="03"
-  label="Cómo trabajamos"
+  label="Compromisos"
   title="Tecnología bien pensada,<br />comunicación clara"
-  intro="Acompañamiento de principio a fin. Estos son los compromisos con los que trabajamos en cada proyecto."
+  intro={sectionIntros.differentiators}
 >
   <ul class="border-t hairline">
     {

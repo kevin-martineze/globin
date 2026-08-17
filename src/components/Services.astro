@@ -1,6 +1,8 @@
 ---
 import Section from './Section.astro';
+import Dual from './Dual.astro';
 import { services } from '../data/services';
+import { sectionIntros } from '../data/copy';
 
 /**
  * Six services in an even three-column grid. The brief asks for uneven
@@ -26,10 +28,9 @@ const icons: Record<string, string> = {
 
 <Section
   id="servicios"
-  index="02"
   label="Servicios"
   title="Lo que construimos"
-  intro="Una oferta amplia, agrupada en seis frentes. La mayoría de los proyectos combina más de uno: casi ningún problema de negocio cabe en una sola categoría."
+  intro={sectionIntros.services}
 >
   <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
     {
@@ -66,10 +67,14 @@ const icons: Record<string, string> = {
           </span>
 
           <h3 class="display-tight mt-7 text-2xl text-bone">{service.name}</h3>
-          <p class="mt-4 flex-1 text-sm leading-relaxed text-muted">{service.summary}</p>
+          <Dual
+            text={service.summary}
+            as="p"
+            class="mt-4 flex-1 text-sm leading-relaxed text-muted"
+          />
 
-          {/* The technical register, kept small and in mono: it is there for the
-              reader who wants it and ignorable for the one who does not. */}
+          {/* Scope tag. Shown in both registers — it is a list of what is
+              covered, not an explanation, so it reads the same either way. */}
           <p class="mt-7 border-t hairline pt-5 font-mono text-[0.7rem] leading-relaxed tracking-wide text-bone/45">
             {service.detail}
           </p>

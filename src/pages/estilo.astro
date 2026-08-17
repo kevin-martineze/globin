@@ -30,6 +30,7 @@ const brandColours = [
 ];
 
 const motionAttrs = [
+  { attr: 'data-reg="simple|tecnico"', effect: 'Dual register — Dual.astro emits both, CSS shows one' },
   { attr: 'data-split', effect: 'Headline lines rise out of a clipping mask' },
   { attr: 'data-reveal="up|fade|scale|left"', effect: 'Enter animation; pair with data-reveal-delay' },
   { attr: 'data-parallax="12"', effect: 'Scroll-linked drift; value is % of travel' },
@@ -51,7 +52,7 @@ const motionAttrs = [
     </p>
   </div>
 
-  <Section id="color" index="01" label="Color" title="Superficies y marca" space="tight">
+  <Section id="color" label="Color" title="Superficies y marca" space="tight">
     <div class="space-y-10">
       <div>
         <p class="eyebrow mb-4">Superficies</p>
@@ -89,15 +90,27 @@ const motionAttrs = [
     </div>
   </Section>
 
-  <Section id="tipografia" index="02" label="Tipografía" title="Tres voces" space="tight">
+  <Section id="tipografia" label="Tipografía" title="Tres voces" space="tight">
     <div class="space-y-10">
       <div class="rounded-2xl border hairline p-8">
         <p class="eyebrow mb-4">.display — titulares</p>
-        <p class="display text-[clamp(2.4rem,6vw,5rem)] text-bone">Archivo 800 · wdth 112</p>
+        <p class="display text-[clamp(2.4rem,6vw,5rem)] text-bone">
+          Fraunces con <em>wonk</em>
+        </p>
+        <p class="mt-4 max-w-xl text-sm leading-relaxed text-muted">
+          Serif variable, opsz 144 y WONK activado: son las formas raras de la
+          fuente las que dan la voz. Nunca en mayúsculas — eso era de otra marca.
+          El <span class="text-brand-accent">em</span> marca la palabra de marca,
+          no cursiva.
+        </p>
       </div>
       <div class="rounded-2xl border hairline p-8">
         <p class="eyebrow mb-4">.display-tight — títulos de tarjeta</p>
-        <p class="display-tight text-3xl text-bone">Archivo 700 · wdth 88</p>
+        <p class="display-tight text-3xl text-bone">Fraunces opsz 32</p>
+        <p class="mt-4 max-w-xl text-sm leading-relaxed text-muted">
+          Mismo tipo con el tamaño óptico bajado. Saltarse ese eje es lo que hace
+          que las serif grandes se vean flacas y las pequeñas, torpes.
+        </p>
       </div>
       <div class="rounded-2xl border hairline p-8">
         <p class="eyebrow mb-4">.eyebrow — etiquetas de sección</p>
@@ -107,17 +120,18 @@ const motionAttrs = [
         </p>
       </div>
       <div class="rounded-2xl border hairline p-8">
-        <p class="eyebrow mb-4">Cuerpo — Inter</p>
+        <p class="eyebrow mb-4">Cuerpo — Manrope</p>
         <p class="max-w-xl text-base leading-relaxed text-muted">
-          El cuerpo va en Inter, tamaño base, <span class="text-bone">bone</span> para lo
-          principal y <span class="text-muted">muted</span> para lo secundario. Nada de
-          mayúsculas en párrafos: las mayúsculas son de la familia display.
+          El cuerpo va en Manrope, tamaño base, <span class="text-bone">bone</span> para lo
+          principal y <span class="text-muted">muted</span> para lo secundario. La pareja
+          serif + grotesca geométrica es lo que separa esta marca de cualquier
+          otra casa de software, que van todas en grotesca sola.
         </p>
       </div>
     </div>
   </Section>
 
-  <Section id="componentes" index="03" label="Componentes" title="Piezas base" space="tight">
+  <Section id="componentes" label="Componentes" title="Piezas base" space="tight">
     <div class="grid gap-5 lg:grid-cols-3">
       <article class="card flex flex-col p-8">
         <p class="font-mono text-[0.7rem] tracking-[0.2em] text-muted uppercase">Tarjeta</p>
@@ -160,7 +174,7 @@ const motionAttrs = [
     <Marquee items={['[Palabra]', '[Palabra]', '[Palabra]', '[Palabra]']} speed={32} />
   </div>
 
-  <Section id="movimiento" index="04" label="Movimiento" title="Atributos" space="tight">
+  <Section id="movimiento" label="Movimiento" title="Atributos" space="tight">
     <div class="overflow-x-auto">
       <table class="w-full min-w-[36rem] text-left text-sm">
         <thead>

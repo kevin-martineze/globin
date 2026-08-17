@@ -1,6 +1,7 @@
 ---
 import Section from './Section.astro';
 import { engagements, engagementNote } from '../data/engagements';
+import { sectionIntros } from '../data/copy';
 
 /**
  * Two engagement models side by side. No prices anywhere: the brief is explicit
@@ -12,10 +13,9 @@ import { engagements, engagementNote } from '../data/engagements';
 
 <Section
   id="modalidades"
-  index="05"
   label="Modalidades"
   title="Dos formas<br />de trabajar juntos"
-  intro="Un proyecto con inicio y final, o un acompañamiento continuo. Muchas empresas empiezan por el primero y siguen con el segundo."
+  intro={sectionIntros.engagements}
 >
   <div class="grid gap-5 lg:grid-cols-2">
     {

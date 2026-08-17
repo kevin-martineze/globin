@@ -1,5 +1,7 @@
 ---
+import Dual from './Dual.astro';
 import { site, whatsappLink } from '../data/site';
+import { hero } from '../data/copy';
 
 /**
  * Hero.
@@ -127,19 +129,26 @@ const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.'
         Clientes en cualquier país
       </p>
 
-      <h1 class="display text-glow text-[clamp(2.6rem,7.4vw,6.6rem)] text-bone" data-split>
-        Soluciones digitales<br />con <span class="text-brand-accent">ingenio</span> para<br />
-        hacer crecer tu negocio
+      {/* No `data-split` on dual copy: SplitText would measure the hidden
+          version too and leave a stack of empty masked lines behind the visible
+          one. The wrapper carries the reveal instead. */}
+      {/* One `<h1>` with both versions inside it, rather than two headings: the
+          hidden one is out of the accessibility tree either way, but a crawler
+          reading the source should still find a single top-level heading. */}
+      <h1
+        class="display text-glow max-w-[15ch] text-[clamp(2.4rem,6.4vw,5.6rem)] text-bone"
+        data-reveal="fade"
+      >
+        <Dual text={hero.headline} />
       </h1>
 
-      <p
-        class="mt-9 max-w-2xl text-lg leading-relaxed text-muted"
-        data-reveal
-        data-reveal-delay="0.1"
-      >
-        En Globin diseñamos y desarrollamos software, aplicaciones móviles,
-        automatizaciones y soluciones cloud adaptadas a las necesidades reales de tu empresa.
-      </p>
+      <div data-reveal data-reveal-delay="0.1">
+        <Dual
+          text={hero.standfirst}
+          as="p"
+          class="mt-9 max-w-2xl text-lg leading-relaxed text-muted"
+        />
+      </div>
 
       <div class="mt-11 flex flex-wrap gap-4" data-reveal data-reveal-delay="0.2">
         <a

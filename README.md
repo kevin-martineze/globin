@@ -67,6 +67,49 @@ Each FAQ entry carries a `source` field naming the section of the brief it comes
 from. It is never rendered; it exists so the page can be audited against the
 document.
 
+## The register switch
+
+The page reads in two voices, and a switch in the header decides which one is on
+screen: `simple`, written for someone who runs a business, and `tecnico`,
+written for someone who builds software.
+
+It is the site's one distinguishing mechanic, and it is not decoration. The
+brief names it twice: §10 contrasts the two ways of saying the same thing and
+asks for the plain one by default, and §5 lists "el cliente no debería tener que
+dominar la tecnología para poder trabajar con el equipo" as a differentiator.
+The switch demonstrates that claim instead of printing it.
+
+How it works:
+
+- Dual strings live in the data files typed as `Dual` (`src/data/dual.ts`), and
+  `Dual.astro` renders **both** versions into the DOM.
+- CSS in `global.css` shows one and hides the other, keyed off `data-register`
+  on `<html>`. No request, no reflow surprise, both voices crawlable, and the
+  page still reads with JavaScript disabled.
+- The choice persists in `localStorage` and is re-applied by an inline script in
+  `<head>` **before first paint** — a returning visitor who chose the technical
+  voice must not watch the simple one flash first.
+- `RegisterToggle.astro` is a radio group, not two buttons: one exclusive
+  choice, so arrow-key navigation and the right announcement come for free. Both
+  instances (header and mobile menu) share one state.
+- Swapping changes text length, so every scroll trigger measured before it is
+  stale. The toggle fires `register:change` and `motion.ts` refreshes
+  ScrollTrigger on the next frame.
+
+Writing the pair is a content rule, not a styling one: same claim, different
+vocabulary; the technical voice explains *how* and never promises anything the
+simple one did not; no technology brand names, because the brief names
+capabilities and never products.
+
+What is deliberately single-register: the FAQ (practical questions read the same
+either way), the differentiators (commitments, not explanations) and the service
+scope tags (a list of what is covered).
+
+Note for anything with a heading: put the `<Dual>` **inside** one `<h1>`/`<h2>`
+rather than rendering the heading twice, and never put `data-split` on dual
+copy — SplitText would measure the hidden version too and leave empty masked
+lines stacked behind the visible one.
+
 ## Design system
 
 All of it is `@theme` in [`src/styles/global.css`](src/styles/global.css) —
@@ -86,18 +129,31 @@ fill them. A third colour would be a colour the brand does not have.
 Components reference roles and never a raw hex, so resampling the `@theme` block
 is the whole rebrand.
 
-**Type.** Four registers. `.display` for oversized headlines (Archivo pushed wide
-on its width axis), `.display-tight` for card titles, `.eyebrow` for section
-labels, and JetBrains Mono for micro-text only — indices, technical asides, the
-bracketed notices. Body copy is Inter. The mono is the brief's "elementos de
-código, usados con moderación"; it never sets a paragraph.
+**Type.** Fraunces for headlines, Manrope for body, JetBrains Mono for
+micro-text. A serif display on a software site is the point: the brand is
+"ingenio", not "enterprise", and every competitor is set in a grotesque. `WONK`
+is on, which swaps in Fraunces' odd single-storey letterforms, and the optical
+size axis tracks the actual size — `.display` at 144, `.display-tight` at 32.
+Skipping that axis is what makes big serifs look thin and small ones clumsy.
+
+Headlines are **sentence case, never uppercase**. An all-caps display line is the
+loudest thing a layout can borrow from another site.
+
+`<em>` inside a headline marks the brand word and is restyled to upright accent
+colour — the italic build is not loaded, so leaving `font-style` alone would let
+the browser synthesise a slanted Fraunces.
 
 **Layout.** `.shell` (max 96rem plus a fluid gutter) is the only container.
 `.hairline` is every border on the page, so contrast is tuned in one place.
 `.card` is the one card treatment, declared once because six sections use it and
 drift between them is what makes a page look assembled rather than designed.
-`.grid-lines` is the engineering grid — two gradients, no image — always behind a
-mask, because a full-bleed grid competes with the type.
+
+Sections carry a label in the margin, not a number in the heading: the running
+order is the job of `SideIndex.astro`, a fixed rail that tracks scroll on
+screens ≥1280px. A number in the heading tells you what you are looking at; a
+rail tells you where you are in the document and how much is left, which is what
+a long single-page site actually needs. Below that width it is hidden rather
+than reflowed — a collapsed rail is just the header menu again.
 
 Run the dev server and open `/estilo` for the whole system rendered from the real
 tokens. It is `noindex` and excluded from the sitemap.

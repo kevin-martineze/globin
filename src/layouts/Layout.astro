@@ -4,6 +4,7 @@ import { site } from '../data/site';
 import { services } from '../data/services';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import SideIndex from '../components/SideIndex.astro';
 
 interface Props {
   title?: string;
@@ -55,10 +56,25 @@ const jsonLd = {
 ---
 
 <!doctype html>
-<html lang="es">
+<!-- `data-register` starts at the simple voice: it is the default the brief
+     asks for, and it is what a visitor with JavaScript disabled will read. -->
+<html lang="es" data-register="simple">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Before first paint, on purpose and inline. A returning visitor who chose
+         the technical voice must not watch the simple one flash first. -->
+    <script is:inline>
+      try {
+        const saved = localStorage.getItem('globin:register');
+        if (saved === 'tecnico' || saved === 'simple') {
+          document.documentElement.dataset.register = saved;
+        }
+      } catch {
+        /* storage blocked — the default in the markup stands */
+      }
+    </script>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -90,6 +106,7 @@ const jsonLd = {
     </a>
 
     <Header />
+    <SideIndex />
     <main id="contenido">
       <slot />
     </main>

@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { nav, site } from '../data/site';
 import { brand } from '../data/media';
+import RegisterToggle from './RegisterToggle.astro';
 
 const hasNav = nav.length > 0;
 const hasCta = Boolean(site.cta && site.ctaHref);
@@ -49,6 +50,13 @@ const hasCta = Boolean(site.cta && site.ctaHref);
     }
 
     <div class="flex items-center gap-3">
+      {/* The switch sits next to the primary action, not buried in the menu:
+          it is the first thing the page offers, and hiding it would make it a
+          feature nobody finds. */}
+      <div class="hidden sm:block">
+        <RegisterToggle />
+      </div>
+
       {
         hasCta && (
           <a
@@ -92,13 +100,18 @@ const hasCta = Boolean(site.cta && site.ctaHref);
         hidden
         class="border-t hairline bg-ink-950/95 backdrop-blur-xl lg:hidden"
       >
-        <nav aria-label="Menú móvil" class="shell flex flex-col py-4">
-          {nav.map((item) => (
-            <a href={item.href} class="border-b hairline py-4 text-lg text-bone last:border-0">
-              {item.label}
-            </a>
-          ))}
-        </nav>
+        <div class="shell flex flex-col py-4">
+          <div class="border-b hairline pb-4 sm:hidden">
+            <RegisterToggle />
+          </div>
+          <nav aria-label="Menú móvil" class="flex flex-col">
+            {nav.map((item) => (
+              <a href={item.href} class="border-b hairline py-4 text-lg text-bone last:border-0">
+                {item.label}
+              </a>
+            ))}
+          </nav>
+        </div>
       </div>
     )
   }

@@ -1,6 +1,8 @@
 ---
 import { site, whatsappLink, mailtoLink } from '../data/site';
+import { closing } from '../data/copy';
 import ContactForm from './ContactForm.astro';
+import Dual from './Dual.astro';
 
 /**
  * Closing CTA, and the anchor every "Cuéntanos tu proyecto" button points at.
@@ -23,16 +25,15 @@ const mailto = mailtoLink('Quiero contarles sobre mi proyecto');
   <div class="shell">
     <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
       <div class="lg:col-span-6">
-        <p class="eyebrow mb-6" data-reveal="fade">07 — Siguiente paso</p>
+        <p class="eyebrow mb-6" data-reveal="fade">Siguiente paso</p>
 
-        <h2 class="display text-glow text-[clamp(2.1rem,4.6vw,4rem)] text-bone" data-split>
-          ¿Tienes una idea,<br />un problema o un proceso<br />que quieras mejorar?
+        <h2 class="display text-glow text-[clamp(2rem,4.2vw,3.6rem)] text-bone" data-split>
+          {closing.question}
         </h2>
 
-        <p class="mt-8 max-w-xl text-lg leading-relaxed text-muted" data-reveal>
-          Cuéntanos qué necesitas y te ayudamos a identificar el siguiente paso.
-          La evaluación inicial no compromete a nada.
-        </p>
+        <div data-reveal>
+          <Dual text={closing.answer} as="p" class="mt-8 max-w-xl text-lg leading-relaxed text-muted" />
+        </div>
 
         <div class="mt-10 space-y-px overflow-hidden rounded-2xl border hairline" data-reveal>
           {

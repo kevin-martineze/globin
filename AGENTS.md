@@ -17,6 +17,10 @@ open values in `src/data/` carry a `TODO(brief)` comment.
 ## Conventions
 
 - **Content lives in `src/data/*.ts`**, never in markup. Components render.
+- **New body copy is written in both registers** unless there is a reason not
+  to. Type it `Dual` and render it through `Dual.astro`; see the register
+  section in the README for how to write the pair. Copy that ships in only one
+  voice makes the switch look broken.
 - **Colour is referenced by role**, never as a raw hex or a stock Tailwind
   colour. The palette in `@theme` is sampled from the logo and may be resampled
   when the identity is finalised; components that use tokens survive that

@@ -1,14 +1,19 @@
 @import "tailwindcss";
 
 /* Self-hosted variable fonts.
-   - Archivo (wdth build) carries both the weight and the width axes, which is
-     what makes the oversized display type work from one file.
-   - Inter for body copy: the brief asks for "una sans serif moderna y legible".
-   - JetBrains Mono only for micro-labels — section indices, tags, the technical
+   - Fraunces for headlines. The `full` build carries the optical-size, SOFT and
+     WONK axes, and WONK is the reason it is here: it swaps in the quirky
+     single-storey letterforms that give the voice its edge. A serif display on
+     a software site is unusual on purpose — the brand is "ingenio", not
+     "enterprise", and every competitor is set in a grotesque.
+   - Manrope for body copy: the brief asks for "una sans serif moderna y
+     legible", and its slightly geometric build keeps it from reading as the
+     default Inter everyone ships.
+   - JetBrains Mono only for micro-labels — the section index, tags, technical
      asides. That is the brief's "elementos de código, usados con moderación";
      it never sets a paragraph. */
-@import "@fontsource-variable/archivo/wdth.css";
-@import "@fontsource-variable/inter";
+@import "@fontsource-variable/fraunces/full.css";
+@import "@fontsource-variable/manrope";
 @import "@fontsource-variable/jetbrains-mono";
 @import "lenis/dist/lenis.css";
 
@@ -53,8 +58,8 @@
   --color-bone: #f1f5f3;
   --color-muted: #8a9a94;
 
-  --font-display: "Archivo Variable", "Archivo", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces Variable", "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Manrope Variable", "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", monospace;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -105,28 +110,46 @@
 }
 
 @layer components {
-  /* Oversized display type. The width axis is pushed wide because the layout is
-     dark and roomy; condensed would read as gaming, which the brief rules out. */
+  /* Headlines. Sentence case, never uppercase: an all-caps display line is the
+     single loudest thing a layout can borrow from another site, and this one
+     needs its own voice. WONK on, optical size pushed to the display end, and
+     SOFT low so the terminals stay crisp at large sizes. */
   .display {
     font-family: var(--font-display);
-    font-variation-settings: "wght" 800, "wdth" 112;
-    line-height: 0.86;
-    letter-spacing: -0.035em;
-    text-transform: uppercase;
+    font-variation-settings:
+      "wght" 640,
+      "opsz" 144,
+      "SOFT" 12,
+      "WONK" 1;
+    line-height: 0.94;
+    letter-spacing: -0.03em;
   }
 
-  /* Same voice, narrower and lighter — card titles and anything that has to sit
-     inside a constrained box without hyphenating. */
+  /* `<em>` inside a headline marks the brand word, not emphasis-as-italic. The
+     italic build is not loaded, so leaving font-style alone would let the
+     browser synthesise a slanted Fraunces, which looks broken at display size. */
+  .display em,
+  .display-tight em {
+    font-style: normal;
+    color: var(--color-brand-accent);
+  }
+
+  /* Same voice at card scale. Optical size drops with it — that is the whole
+     point of the axis, and skipping it is what makes big serifs look thin and
+     small serifs look clumsy. */
   .display-tight {
     font-family: var(--font-display);
-    font-variation-settings: "wght" 700, "wdth" 88;
-    line-height: 0.92;
-    letter-spacing: -0.02em;
-    text-transform: uppercase;
+    font-variation-settings:
+      "wght" 600,
+      "opsz" 32,
+      "SOFT" 20,
+      "WONK" 1;
+    line-height: 1.02;
+    letter-spacing: -0.015em;
   }
 
-  /* Section kicker: "01 — Servicios". Mono, because the code reference is the
-     brief's visual cue and a label is small enough to carry it without noise. */
+  /* The register-marked technical voice, and anything that should read as a
+     machine label rather than as prose. */
   .eyebrow {
     font-family: var(--font-mono);
     font-weight: 500;
@@ -206,6 +229,42 @@
   /* Text that has to survive on top of the hero gradient. */
   .text-glow {
     text-shadow: 0 0 40px color-mix(in oklab, var(--color-brand-accent) 25%, transparent);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Dual register.
+
+   The page can be read in two voices: `simple`, written for someone who
+   runs a business, and `tecnico`, written for someone who builds
+   software. Both texts are real, both ship in the HTML, and CSS decides
+   which one is on screen — so the switch costs no request, survives
+   JavaScript failing, and leaves both versions crawlable.
+
+   `<html>` carries `data-register`, set server-side to `simple` and
+   corrected before first paint by the inline script in Layout.astro.
+   ------------------------------------------------------------------ */
+[data-reg] {
+  display: none;
+}
+
+:root[data-register="simple"] [data-reg="simple"],
+:root[data-register="tecnico"] [data-reg="tecnico"] {
+  display: revert;
+}
+
+/* The swap gets a short fade so the eye registers that the text changed
+   rather than suspecting it misread the first version. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reg] {
+    animation: register-in 0.32s var(--ease-out-expo);
+  }
+}
+
+@keyframes register-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
   }
 }
 
