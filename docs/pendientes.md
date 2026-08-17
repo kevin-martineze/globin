@@ -10,8 +10,10 @@ registra lo que ese documento deja abierto.
       `globinadmin@gmail.com`, en `src/data/site.ts`. El bloque de cierre suma un
       formulario que arma el mensaje y lo abre en WhatsApp o en el correo, sin
       backend y sin guardar nada.
-- [ ] **Dominio.** Se compra y se apunta `site` en `astro.config.mjs`: de ahí
-      salen el sitemap, las URLs canónicas y la URL de la imagen para compartir.
+- [ ] **Dominio.** Se compra, se apunta en Vercel y se define la variable de
+      entorno `SITE_URL` con la URL final. Ya no hace falta tocar código: de esa
+      variable salen el sitemap, las URLs canónicas y la imagen para compartir.
+      Mientras no exista, el build en Vercel usa solo el dominio `.vercel.app`.
 - [x] **Logo.** Integrado. El master está en `src/assets/brand/globin-logo.png` y
       `scripts/build-brand-assets.mjs` deriva de él la marca transparente, los
       favicons y la tarjeta para compartir.

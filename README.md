@@ -207,6 +207,30 @@ the built one reads better and weighs nothing. The render is still in
 3. Compose it in `src/pages/index.astro`, keeping the indices contiguous.
 4. Add the anchor to `nav` in `src/data/site.ts`.
 
+## Deploy
+
+Static output, so any static host works. The repo is set up for Vercel with zero
+config: framework preset Astro, build `pnpm build`, output `dist`, and pnpm
+picked up from the lockfile. Connecting the repo in the Vercel dashboard is a
+one-time manual step — after that every push to `main` publishes, and every
+branch gets its own preview URL.
+
+The one thing that is not zero-config is the absolute base URL, which the
+sitemap, the canonical links and `og:image` are built from. `astro.config.mjs`
+resolves it at build time in this order:
+
+1. `SITE_URL`, if set. This is what to set once the real domain is bought — it
+   is the only change needed at that point, in the host's environment variables.
+2. `VERCEL_PROJECT_PRODUCTION_URL`, injected by Vercel. It points at the
+   production domain even inside preview builds, which is what canonical and
+   `og:image` have to reference; the per-deployment URL would make every preview
+   claim to be the canonical page.
+3. `http://localhost:4321` for a plain local build.
+
+The fallback chain uses truthiness rather than `??` on purpose: an env var that
+exists but is empty is normal in CI, and `??` would pass the empty string to
+Astro and fail the build.
+
 ## Before launch
 
 See [`docs/pendientes.md`](docs/pendientes.md) for the full list. The two that
