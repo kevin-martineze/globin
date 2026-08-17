@@ -173,7 +173,7 @@ Elements carrying `data-reveal` or `data-split` start at `opacity: 0`. If
 anything in the boot sequence throws, `motion.ts` adds `no-motion` to `<html>`,
 which restores full opacity — a JavaScript failure can never leave the page
 blank. `prefers-reduced-motion` is honoured throughout, including the CSS-only
-node pulse in the hero.
+orbit rotation in the hero.
 
 Lenis owns the scroll position, so ScrollTrigger reads from it and GSAP's ticker
 drives the RAF loop; anchor links are routed through Lenis too. Changing any of
@@ -240,15 +240,23 @@ That one needs drawing.
 
 ### Backdrops
 
-`src/assets/textures/node-grid.jpg` (1024×1024) is the one generated render in
-use, behind the process section. It nearly tiles but not exactly, so it goes in
-as a single `object-cover` layer, never repeated. It is decorative: `alt=""`
-plus `aria-hidden`.
+No generated image is used anywhere. Two were tried and both were dropped: a
+ribbon render for the hero lost to the built backdrop, and a node-network
+texture behind the process section was competing with the four cards moving
+across it. Both are kept in `media-source/gemini/`, outside version control, in
+case a future section wants one.
 
-The hero keeps its built backdrop — radial gradient, engineering grid, animated
-node graph, grain. A generated ribbon render was tried in its place and dropped:
-the built one reads better and weighs nothing. The render is still in
-`media-source/gemini/` if a section ever wants it.
+Every ground on the page is drawn in CSS from the brand's own geometry: an
+off-canvas wash, the `.column-rules` twelve-column grid, the orbit motif in the
+hero, and grain. The hero anchors its wash top-left, the process section anchors
+its own top-right — same vocabulary, opposite corner, so the page rhymes rather
+than repeats.
+
+Two things to preserve. The wash is anchored **off-canvas**: a gradient whose
+centre you can find reads as a glow, and the glow is the tell of a generated
+backdrop. And `.column-rules` lives in `global.css`, not scoped in a component —
+two sections use it now, and Astro's scoped styles would have silently applied
+to only one of them.
 
 ## Adding a section
 

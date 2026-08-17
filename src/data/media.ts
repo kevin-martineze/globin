@@ -14,7 +14,6 @@
  * take `alt=""` plus `aria-hidden="true"` instead of a description.
  */
 import mark from '../assets/brand/globin-mark.png';
-import nodeGrid from '../assets/textures/node-grid.jpg';
 
 export type MediaEntry = {
   src: ImageMetadata;
@@ -36,24 +35,15 @@ export const brand = {
 } as const satisfies Record<string, MediaEntry>;
 
 /**
- * Generated backdrops. Decorative — they carry no information the copy does not
- * already state — so they ship with `alt=""` plus `aria-hidden`, and the alt
- * strings here stay empty on purpose.
+ * No generated backdrops are in use.
  *
- * A ribbon render for the hero was tried and dropped: the built backdrop it
- * would have replaced (gradient, grid, animated node graph) reads better, and
- * it costs no image weight. The render is kept in `media-source/gemini/` in
- * case a section ever wants it.
+ * Two were tried and both were dropped. A ribbon render for the hero lost to
+ * the built backdrop, which reads better and weighs nothing; a node-network
+ * texture behind the process section was competing with the four cards moving
+ * across it. Every ground on the page is now drawn in CSS from the brand's own
+ * geometry. Both renders are kept in `media-source/gemini/`, outside version
+ * control, in case a future section wants one.
  */
-export const textures = {
-  /**
-   * Node network, 1024x1024. Measured, it very nearly tiles but not exactly —
-   * opposite edges differ about a third as much as two random columns do,
-   * which is close enough to look repeating and far enough to show a seam. So
-   * it is used as one non-repeating cover layer, never as `background-repeat`.
-   */
-  nodeGrid: { src: nodeGrid, alt: '' },
-} as const satisfies Record<string, MediaEntry>;
 
 /** TODO(brief): photography, if any is ever supplied. */
 export const photos: Record<string, MediaEntry> = {};

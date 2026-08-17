@@ -189,35 +189,6 @@ const whatsapp = whatsappLink(t.form.prefilled);
 </section>
 
 <style>
-  /* Twelve columns matching `.shell`, so the rules fall between the words
-     instead of across them. `background-size` does the division: percentages in
-     a repeating gradient would repeat over the element, not the container. */
-  .column-rules {
-    --cols: 12;
-    max-width: 96rem;
-    margin-inline: auto;
-    padding-inline: var(--gutter);
-    background-image: linear-gradient(
-      to right,
-      color-mix(in oklab, var(--color-bone) 7%, transparent) 1px,
-      transparent 1px
-    );
-    background-size: calc(100% / var(--cols)) 100%;
-    /* Both, and in this order: `origin` makes the 1/12 division measure the
-       content box (the same width `.shell` gives the type), `clip` stops the
-       rules bleeding into the gutter. */
-    background-origin: content-box;
-    background-clip: content-box;
-    opacity: 0.9;
-  }
-
-  @media (max-width: 768px) {
-    /* Twelve rules on a phone is hatching, not structure. */
-    .column-rules {
-      --cols: 4;
-    }
-  }
-
   /* The orbits. Tilt is static; only the inner group turns, which is what makes
      the ribbon look like it is travelling around a sphere rather than a flat
      circle spinning in place.

@@ -1,6 +1,4 @@
 ---
-import { Image } from 'astro:assets';
-import { textures } from '../data/media';
 import { useContent, toLang } from '../i18n';
 
 const t = useContent(toLang(Astro.currentLocale));
@@ -12,6 +10,12 @@ const t = useContent(toLang(Astro.currentLocale));
  *
  * Below 1024px the rail is never pinned — it stays a plain swipeable list with
  * scroll snapping, which is what a phone expects and costs no extra code.
+ *
+ * The backdrop is deliberately the quietest on the page. A generated node
+ * texture sat here and was removed: this section already has four cards moving
+ * sideways, and a busy ground behind them turned motion into noise. What is
+ * left is the hero's own vocabulary — one off-canvas wash and the column rules
+ * — anchored to the opposite corner, so the page rhymes instead of repeating.
  */
 ---
 
@@ -20,20 +24,15 @@ const t = useContent(toLang(Astro.currentLocale));
   data-rail
   class="relative flex flex-col justify-center overflow-hidden py-24 lg:min-h-screen lg:py-0"
 >
-  {/* One cover layer, never `background-repeat`: the render nearly tiles but
-      not exactly, and a repeated seam is more visible than an upscaled pixel.
-      Masked at the bottom so the section melts into the next one. */}
-  <div class="mask-fade-b pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-    <Image
-      src={textures.nodeGrid.src}
-      alt=""
-      aria-hidden="true"
-      widths={[768, 1024]}
-      sizes="100vw"
-      loading="lazy"
-      class="size-full object-cover opacity-30"
-    />
+  <!-- Wash anchored off-canvas on the right, mirroring the hero's, which is
+       anchored top-left. Same treatment, opposite corner: the page turns over
+       instead of repeating itself. -->
+  <div
+    class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(95%_85%_at_112%_18%,var(--color-brand-core)_0%,transparent_58%)]"
+  >
   </div>
+
+  <div class="column-rules mask-fade-b pointer-events-none absolute inset-0 -z-10"></div>
 
   <div class="shell">
     <div class="max-w-3xl">

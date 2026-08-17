@@ -216,14 +216,36 @@
     mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
   }
 
-  /* Engineering grid. Two gradients rather than an image, so it costs nothing
-     and scales with the viewport. Always paired with a mask — a full-bleed grid
-     competes with the type. */
-  .grid-lines {
-    background-image:
-      linear-gradient(to right, var(--edge) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--edge) 1px, transparent 1px);
-    background-size: 4.5rem 4.5rem;
+  /* Twelve column rules matching `.shell`, so they fall between the words
+     instead of across them. Shared by the hero and the process section, which
+     is why it lives here rather than scoped inside a component.
+
+     `background-size` does the division: percentages inside a repeating
+     gradient would repeat over the element, not the container. And both
+     `background-origin` and `background-clip` are needed, in that order —
+     origin makes the twelfths measure the content box (the width `.shell`
+     gives the type), clip stops the rules bleeding into the gutter. Clip alone
+     would size off the padding box and drift out of step with the layout. */
+  .column-rules {
+    --cols: 12;
+    max-width: 96rem;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    background-image: linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-bone) 7%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: calc(100% / var(--cols)) 100%;
+    background-origin: content-box;
+    background-clip: content-box;
+  }
+
+  /* Twelve rules on a phone is hatching, not structure. */
+  @media (max-width: 768px) {
+    .column-rules {
+      --cols: 4;
+    }
   }
 
   /* Text that has to survive on top of the hero gradient. */
