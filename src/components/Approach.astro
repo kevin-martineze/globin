@@ -1,31 +1,27 @@
 ---
-import Dual from './Dual.astro';
-import { approach, symptoms } from '../data/copy';
+import { useContent, toLang } from '../i18n';
 
 /**
  * Problem and solution (brief §9). One section rather than two: the question
  * only works if the answer is in the same eyeful, and splitting them would put
  * a scroll break between a worry and its resolution.
- *
- * This is the block where the register switch pays off most — the same worry
- * described to an owner and to an engineer are genuinely different sentences,
- * and reading one right after the other is what makes the switch land.
  */
+const t = useContent(toLang(Astro.currentLocale));
 ---
 
 <section id="enfoque" class="relative py-24 lg:py-36">
   <div class="shell">
     <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
       <div class="lg:col-span-7">
-        <p class="eyebrow mb-8" data-reveal="fade">El punto de partida</p>
+        <p class="eyebrow mb-8" data-reveal="fade">{t.approach.label}</p>
 
-        <h2 class="display text-[clamp(1.8rem,3.4vw,3rem)] text-bone" data-reveal="fade">
-          <Dual text={approach.problem} />
+        <h2 class="display text-[clamp(1.8rem,3.4vw,3rem)] text-bone" data-split>
+          {t.approach.problem}
         </h2>
 
         <ul class="mt-12 grid gap-px overflow-hidden rounded-2xl border hairline">
           {
-            symptoms.map((symptom, index) => (
+            t.approach.symptoms.map((symptom, index) => (
               <li
                 class="flex items-center gap-5 border-b hairline bg-ink-900/40 px-6 py-5 last:border-0"
                 data-reveal
@@ -34,7 +30,7 @@ import { approach, symptoms } from '../data/copy';
                 <span class="font-mono text-xs text-brand-accent/80">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <Dual text={symptom} class="text-sm leading-relaxed text-bone/85" />
+                <span class="text-sm leading-relaxed text-bone/85">{symptom}</span>
               </li>
             ))
           }
@@ -43,18 +39,13 @@ import { approach, symptoms } from '../data/copy';
 
       <div class="lg:col-span-5">
         <div class="card sticky top-28 p-8 lg:p-10" data-reveal="left">
-          <p class="eyebrow mb-6">La respuesta</p>
+          <p class="eyebrow mb-6">{t.approach.answerLabel}</p>
 
-          <Dual
-            text={approach.solution}
-            as="p"
-            class="display-tight text-2xl leading-tight text-bone"
-          />
-
-          <Dual text={approach.detail} as="p" class="mt-6 text-sm leading-relaxed text-muted" />
+          <p class="display-tight text-2xl leading-tight text-bone">{t.approach.solution}</p>
+          <p class="mt-6 text-sm leading-relaxed text-muted">{t.approach.detail}</p>
 
           <div class="mt-8 border-t hairline pt-8">
-            <Dual text={approach.promise} as="p" class="text-sm leading-relaxed text-bone/85" />
+            <p class="text-sm leading-relaxed text-bone/85">{t.approach.promise}</p>
           </div>
         </div>
       </div>

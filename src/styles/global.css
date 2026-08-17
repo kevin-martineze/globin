@@ -232,42 +232,6 @@
   }
 }
 
-/* ------------------------------------------------------------------
-   Dual register.
-
-   The page can be read in two voices: `simple`, written for someone who
-   runs a business, and `tecnico`, written for someone who builds
-   software. Both texts are real, both ship in the HTML, and CSS decides
-   which one is on screen — so the switch costs no request, survives
-   JavaScript failing, and leaves both versions crawlable.
-
-   `<html>` carries `data-register`, set server-side to `simple` and
-   corrected before first paint by the inline script in Layout.astro.
-   ------------------------------------------------------------------ */
-[data-reg] {
-  display: none;
-}
-
-:root[data-register="simple"] [data-reg="simple"],
-:root[data-register="tecnico"] [data-reg="tecnico"] {
-  display: revert;
-}
-
-/* The swap gets a short fade so the eye registers that the text changed
-   rather than suspecting it misread the first version. */
-@media (prefers-reduced-motion: no-preference) {
-  [data-reg] {
-    animation: register-in 0.32s var(--ease-out-expo);
-  }
-}
-
-@keyframes register-in {
-  from {
-    opacity: 0;
-    transform: translateY(0.35rem);
-  }
-}
-
 /* Pre-animation state. GSAP takes over on load; if it throws, motion.ts adds
    `no-motion` to <html> so nothing is ever left invisible. */
 [data-reveal],

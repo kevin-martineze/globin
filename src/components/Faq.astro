@@ -1,6 +1,8 @@
 ---
 import Section from './Section.astro';
-import { faq } from '../data/faq';
+import { useContent, toLang } from '../i18n';
+
+const t = useContent(toLang(Astro.currentLocale));
 
 /**
  * Native `<details>`, not a scripted accordion: it opens with JavaScript
@@ -13,10 +15,10 @@ import { faq } from '../data/faq';
  */
 ---
 
-<Section id="preguntas" label="Preguntas frecuentes" title="Lo que suelen<br />preguntarnos">
+<Section id="preguntas" label={t.faq.label} title={t.faq.title}>
   <div class="max-w-3xl border-t hairline">
     {
-      faq.map((item, index) => (
+      t.faq.items.map((item, index) => (
         <details name="faq" class="group border-b hairline" data-reveal data-reveal-delay={index * 0.04}>
           <summary class="flex cursor-pointer list-none items-start gap-6 py-6 text-left [&::-webkit-details-marker]:hidden">
             <span class="display-tight flex-1 text-lg text-bone transition-colors duration-300 group-hover:text-brand-accent lg:text-xl">

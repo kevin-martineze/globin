@@ -1,8 +1,8 @@
 ---
 import Section from './Section.astro';
-import Dual from './Dual.astro';
-import { services } from '../data/services';
-import { sectionIntros } from '../data/copy';
+import { useContent, toLang } from '../i18n';
+
+const t = useContent(toLang(Astro.currentLocale));
 
 /**
  * Six services in an even three-column grid. The brief asks for uneven
@@ -28,13 +28,13 @@ const icons: Record<string, string> = {
 
 <Section
   id="servicios"
-  label="Servicios"
-  title="Lo que construimos"
-  intro={sectionIntros.services}
+  label={t.services.label}
+  title={t.services.title}
+  intro={t.services.intro}
 >
   <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
     {
-      services.map((service, index) => (
+      t.services.items.map((service, index) => (
         <article
           id={service.id}
           data-reveal
@@ -67,14 +67,10 @@ const icons: Record<string, string> = {
           </span>
 
           <h3 class="display-tight mt-7 text-2xl text-bone">{service.name}</h3>
-          <Dual
-            text={service.summary}
-            as="p"
-            class="mt-4 flex-1 text-sm leading-relaxed text-muted"
-          />
+          <p class="mt-4 flex-1 text-sm leading-relaxed text-muted">{service.summary}</p>
 
-          {/* Scope tag. Shown in both registers — it is a list of what is
-              covered, not an explanation, so it reads the same either way. */}
+          {/* The technical register, kept small and in mono: there for the
+              reader who wants it, ignorable for the one who does not. */}
           <p class="mt-7 border-t hairline pt-5 font-mono text-[0.7rem] leading-relaxed tracking-wide text-bone/45">
             {service.detail}
           </p>

@@ -1,11 +1,12 @@
 ---
 import { Image } from 'astro:assets';
-import { nav, site } from '../data/site';
+import { site } from '../data/site';
 import { brand } from '../data/media';
-import RegisterToggle from './RegisterToggle.astro';
+import { useContent, toLang, localePath } from '../i18n';
+import LanguageSwitch from './LanguageSwitch.astro';
 
-const hasNav = nav.length > 0;
-const hasCta = Boolean(site.cta && site.ctaHref);
+const lang = toLang(Astro.currentLocale);
+const t = useContent(lang);
 ---
 
 <header
@@ -13,7 +14,7 @@ const hasCta = Boolean(site.cta && site.ctaHref);
   class="fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500"
 >
   <div class="shell flex items-center justify-between gap-6 py-5">
-    <a href="/" class="group flex items-center gap-3" aria-label={`${site.name} — inicio`}>
+    <a href={localePath(lang)} class="group flex items-center gap-3" aria-label={t.actions.homeLabel}>
       {/* The link already names itself with aria-label, so both the mark and the
           wordmark are decorative here — otherwise a screen reader announces the
           brand name three times over. */}
@@ -34,87 +35,75 @@ const hasCta = Boolean(site.cta && site.ctaHref);
       </span>
     </a>
 
-    {
-      hasNav && (
-        <nav aria-label="Principal" class="hidden items-center gap-8 lg:flex">
-          {nav.map((item) => (
-            <a
-              href={item.href}
-              class="relative text-sm text-muted transition-colors duration-300 after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-brand-accent after:transition-[width] after:duration-500 hover:text-bone hover:after:w-full"
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
-      )
-    }
+    <nav aria-label={t.footer.navLabel} class="hidden items-center gap-8 lg:flex">
+      {
+        t.nav.map((item) => (
+          <a
+            href={item.href}
+            class="relative text-sm text-muted transition-colors duration-300 after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-brand-accent after:transition-[width] after:duration-500 hover:text-bone hover:after:w-full"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
 
     <div class="flex items-center gap-3">
-      {/* The switch sits next to the primary action, not buried in the menu:
-          it is the first thing the page offers, and hiding it would make it a
-          feature nobody finds. */}
       <div class="hidden sm:block">
-        <RegisterToggle />
+        <LanguageSwitch />
       </div>
 
-      {
-        hasCta && (
-          <a
-            href={site.ctaHref}
-            class="group relative hidden overflow-hidden rounded-full bg-bone px-5 py-2.5 text-sm font-medium text-ink-950 sm:block"
-          >
-            {/* The fill wipes down from above on hover — the one flourish the
-                header gets, so it stays on the primary action only. */}
-            <span class="absolute inset-0 -translate-y-full bg-brand-accent transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0" />
-            <span class="relative transition-colors duration-300 group-hover:text-bone">
-              {site.cta}
-            </span>
-          </a>
-        )
-      }
+      <a
+        href={site.ctaHref}
+        class="group relative hidden overflow-hidden rounded-full bg-bone px-5 py-2.5 text-sm font-medium text-ink-950 md:block"
+      >
+        {/* The fill wipes down from above on hover — the one flourish the header
+            gets, so it stays on the primary action only. */}
+        <span
+          class="absolute inset-0 -translate-y-full bg-brand-accent transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0"
+        ></span>
+        <span class="relative transition-colors duration-300 group-hover:text-bone">
+          {t.actions.primary}
+        </span>
+      </a>
 
-      {
-        hasNav && (
-          <button
-            type="button"
-            data-menu-toggle
-            aria-expanded="false"
-            aria-controls="menu-movil"
-            class="flex size-11 items-center justify-center rounded-full border hairline lg:hidden"
-          >
-            <span class="sr-only">Abrir menú</span>
-            <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden="true">
-              <path d="M0 1h18M0 6h18M0 11h18" stroke="currentColor" stroke-width="1.5" />
-            </svg>
-          </button>
-        )
-      }
+      <button
+        type="button"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="menu-movil"
+        class="flex size-11 items-center justify-center rounded-full border hairline lg:hidden"
+      >
+        <span class="sr-only">{t.actions.openMenu}</span>
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden="true">
+          <path d="M0 1h18M0 6h18M0 11h18" stroke="currentColor" stroke-width="1.5"></path>
+        </svg>
+      </button>
     </div>
   </div>
 
-  {
-    hasNav && (
-      <div
-        id="menu-movil"
-        data-menu-panel
-        hidden
-        class="border-t hairline bg-ink-950/95 backdrop-blur-xl lg:hidden"
-      >
-        <div class="shell flex flex-col py-4">
-          <div class="border-b hairline pb-4 sm:hidden">
-            <RegisterToggle />
-          </div>
-          <nav aria-label="Menú móvil" class="flex flex-col">
-            {nav.map((item) => (
-              <a href={item.href} class="border-b hairline py-4 text-lg text-bone last:border-0">
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        </div>
+  <div
+    id="menu-movil"
+    data-menu-panel
+    hidden
+    class="border-t hairline bg-ink-950/95 backdrop-blur-xl lg:hidden"
+  >
+    <div class="shell flex flex-col py-4">
+      <nav aria-label={t.footer.navLabel} class="flex flex-col">
+        {
+          t.nav.map((item) => (
+            <a href={item.href} class="border-b hairline py-4 text-lg text-bone">
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="flex flex-wrap items-center gap-3 pt-5 sm:hidden">
+        <LanguageSwitch />
       </div>
-    )
-  }
+    </div>
+  </div>
 </header>
 
 <style>

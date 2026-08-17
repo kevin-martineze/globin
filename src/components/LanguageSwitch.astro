@@ -1,0 +1,53 @@
+---
+import { toLang, otherLang, localePath, useContent } from '../i18n';
+
+/**
+ * Two-language switch.
+ *
+ * A plain link to the other language's page, not a script: it works before
+ * hydration, it is crawlable, and it cannot desync from the route the way a
+ * scripted toggle can.
+ *
+ * Clicking it records the choice, which is what stops the first-visit
+ * auto-redirect in Layout.astro from ever overriding a deliberate decision.
+ * That guarantee is the reason the switch must always be visible — the brief's
+ * markets are Colombia *and* abroad, and guessing wrong without an escape hatch
+ * is worse than not guessing.
+ */
+const lang = toLang(Astro.currentLocale);
+const target = otherLang(lang);
+const t = useContent(lang);
+---
+
+<a
+  data-lang-switch={target}
+  href={localePath(target)}
+  hreflang={target}
+  lang={target}
+  aria-label={`${t.language.label}: ${t.language.switchTo}`}
+  class="flex items-center gap-1.5 rounded-full border hairline px-3 py-2 font-mono text-[0.68rem] tracking-[0.12em] text-muted uppercase transition-colors duration-300 hover:border-bone/40 hover:text-bone"
+>
+  <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <circle cx="7" cy="7" r="5.6" stroke="currentColor" stroke-width="1.1"></circle>
+    <path
+      d="M1.4 7h11.2M7 1.4c1.6 1.7 2.4 3.6 2.4 5.6S8.6 10.9 7 12.6C5.4 10.9 4.6 9 4.6 7S5.4 3.1 7 1.4Z"
+      stroke="currentColor"
+      stroke-width="1.1"></path>
+  </svg>
+  {t.language.switchTo}
+</a>
+
+<script>
+  const KEY = 'globin:lang';
+
+  document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach((link) => {
+    link.addEventListener('click', () => {
+      try {
+        localStorage.setItem(KEY, link.dataset.langSwitch ?? 'es');
+      } catch {
+        // Storage blocked: the navigation still happens, the preference just is
+        // not remembered. Never worth cancelling the click over.
+      }
+    });
+  });
+</script>

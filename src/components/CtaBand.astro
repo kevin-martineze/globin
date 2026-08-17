@@ -1,18 +1,18 @@
 ---
 import { site, whatsappLink, mailtoLink } from '../data/site';
-import { closing } from '../data/copy';
+import { useContent, toLang } from '../i18n';
 import ContactForm from './ContactForm.astro';
-import Dual from './Dual.astro';
 
 /**
- * Closing CTA, and the anchor every "Cuéntanos tu proyecto" button points at.
+ * Closing CTA, and the anchor every primary button points at.
  *
  * Two ways in, side by side on purpose: the form for the visitor who wants to
  * think before writing, and the direct channels for the one who would rather
  * just open a chat. Making the form the only route would cost the second kind.
  */
-const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.');
-const mailto = mailtoLink('Quiero contarles sobre mi proyecto');
+const t = useContent(toLang(Astro.currentLocale));
+const whatsapp = whatsappLink(t.form.prefilled);
+const mailto = mailtoLink(t.form.emailSubject);
 ---
 
 <section id="contacto" class="grain relative overflow-hidden py-24 lg:py-36">
@@ -20,20 +20,19 @@ const mailto = mailtoLink('Quiero contarles sobre mi proyecto');
     class="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(90%_120%_at_80%_110%,var(--color-brand-mid)_0%,var(--color-brand-core)_38%,var(--color-ink-950)_74%)]"
   >
   </div>
-  <div class="pointer-events-none absolute inset-0 -z-10 grid-lines opacity-30"></div>
 
   <div class="shell">
     <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
       <div class="lg:col-span-6">
-        <p class="eyebrow mb-6" data-reveal="fade">Siguiente paso</p>
+        <p class="eyebrow mb-6" data-reveal="fade">{t.closing.label}</p>
 
         <h2 class="display text-glow text-[clamp(2rem,4.2vw,3.6rem)] text-bone" data-split>
-          {closing.question}
+          {t.closing.question}
         </h2>
 
-        <div data-reveal>
-          <Dual text={closing.answer} as="p" class="mt-8 max-w-xl text-lg leading-relaxed text-muted" />
-        </div>
+        <p class="mt-8 max-w-xl text-lg leading-relaxed text-muted" data-reveal>
+          {t.closing.answer}
+        </p>
 
         <div class="mt-10 space-y-px overflow-hidden rounded-2xl border hairline" data-reveal>
           {
@@ -46,7 +45,7 @@ const mailto = mailtoLink('Quiero contarles sobre mi proyecto');
               >
                 <span class="flex flex-col gap-1">
                   <span class="font-mono text-[0.7rem] tracking-[0.2em] text-muted uppercase">
-                    WhatsApp
+                    {t.closing.channels.whatsapp}
                   </span>
                   <span class="text-sm text-bone">{site.phone}</span>
                 </span>
@@ -72,7 +71,7 @@ const mailto = mailtoLink('Quiero contarles sobre mi proyecto');
               >
                 <span class="flex flex-col gap-1">
                   <span class="font-mono text-[0.7rem] tracking-[0.2em] text-muted uppercase">
-                    Correo
+                    {t.closing.channels.email}
                   </span>
                   <span class="text-sm break-all text-bone">{site.email}</span>
                 </span>
@@ -91,7 +90,7 @@ const mailto = mailtoLink('Quiero contarles sobre mi proyecto');
           }
         </div>
 
-        <p class="mt-8 text-sm text-muted">{site.coverage}</p>
+        <p class="mt-8 text-sm text-muted">{t.closing.coverage}</p>
       </div>
 
       <div class="lg:col-span-6" data-reveal data-reveal-delay="0.1">

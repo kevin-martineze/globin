@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import { site } from '../data/site';
-import { services } from '../data/services';
+import { useContent, toLang, localePath, languages } from '../i18n';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SideIndex from '../components/SideIndex.astro';
@@ -13,24 +13,21 @@ interface Props {
   noindex?: boolean;
 }
 
-const { title, description = site.description, noindex = false } = Astro.props;
-const pageTitle = title
-  ? `${title} — ${site.name}`
-  : site.tagline
-    ? `${site.name} — ${site.tagline}`
-    : site.name;
+const { title, description, noindex = false } = Astro.props;
+
+const lang = toLang(Astro.currentLocale);
+const t = useContent(lang);
+
+const metaDescription = description ?? t.meta.description;
+const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${t.meta.tagline}`;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
-// Built from the logo by scripts/build-brand-assets.mjs. Absolute URL: the
-// scrapers that read this tag do not resolve relative paths.
 const ogImage = new URL('/og-image.png', Astro.site ?? Astro.url).href;
 
 // ProfessionalService is the closest honest type for a software firm that sells
 // services rather than a product. Only properties the brief supports are set:
 // structured data that overstates what the business is gets flagged, and there
 // is no aggregateRating or review to claim while the company has no clients yet.
-// Ternaries rather than `&&`: an empty string is falsy but is not an object, so
-// `'' && {…}` spreads a string and TypeScript rejects it.
 const sameAs = Object.values(site.social).filter(Boolean);
 
 const jsonLd = {
@@ -38,49 +35,77 @@ const jsonLd = {
   '@type': 'ProfessionalService',
   name: site.name,
   url: canonical.origin,
-  // Country only — see the note on `country` in src/data/site.ts. A locality
-  // here would contradict a page that never names one, and Google reads the
-  // two together.
-  address: {
-    '@type': 'PostalAddress',
-    addressCountry: 'CO',
-  },
+  // Country only — see the note on `country` in src/data/site.ts.
+  address: { '@type': 'PostalAddress', addressCountry: site.countryCode },
   areaServed: 'Worldwide',
-  knowsAbout: services.map((service) => service.name),
-  ...(site.description ? { description: site.description } : {}),
+  knowsAbout: t.services.items.map((service) => service.name),
+  description: t.meta.description,
+  slogan: t.meta.tagline,
   ...(site.email ? { email: site.email } : {}),
   ...(site.phone ? { telephone: site.phone } : {}),
-  ...(site.tagline ? { slogan: site.tagline } : {}),
   ...(sameAs.length ? { sameAs } : {}),
 };
 ---
 
 <!doctype html>
-<!-- `data-register` starts at the simple voice: it is the default the brief
-     asks for, and it is what a visitor with JavaScript disabled will read. -->
-<html lang="es" data-register="simple">
+<html lang={t.htmlLang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Before first paint, on purpose and inline. A returning visitor who chose
-         the technical voice must not watch the simple one flash first. -->
+    <!--
+      First-visit language redirect, inline and before paint so a mismatched
+      page never flashes.
+
+      It reads the *browser* language, not the IP: a Colombian abroad speaks
+      Spanish and a foreign client in Bogotá does not, so geolocation would get
+      both wrong. It runs once — the moment anyone uses the switch, or is
+      redirected, the choice is stored and never overridden again. `replace`
+      keeps the back button working.
+    -->
     <script is:inline>
-      try {
-        const saved = localStorage.getItem('globin:register');
-        if (saved === 'tecnico' || saved === 'simple') {
-          document.documentElement.dataset.register = saved;
+      (function () {
+        try {
+          var KEY = 'globin:lang';
+          var stored = localStorage.getItem(KEY);
+          var current = document.documentElement.lang;
+          if (stored || !navigator.language) return;
+
+          var prefers = navigator.language.toLowerCase().startsWith('es') ? 'es' : 'en';
+          if (prefers === current) return;
+
+          localStorage.setItem(KEY, prefers);
+          window.location.replace(prefers === 'es' ? '/' : '/en/');
+        } catch (error) {
+          /* storage blocked or navigation refused: the requested page stands */
         }
-      } catch {
-        /* storage blocked — the default in the markup stands */
-      }
+      })();
     </script>
+
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonical.href} />
+
+    {/* Tells search engines the two versions are the same page in two
+        languages, rather than duplicates competing with each other. */}
+    {
+      languages.map((code) => (
+        <link
+          rel="alternate"
+          hreflang={code}
+          href={new URL(localePath(code), Astro.site ?? Astro.url).href}
+        />
+      ))
+    }
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL('/', Astro.site ?? Astro.url).href}
+    />
+
     <title>{pageTitle}</title>
-    {description && <meta name="description" content={description} />}
+    <meta name="description" content={metaDescription} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <!-- Matches --color-ink-950, which is the logo's own backdrop colour. -->
     <meta name="theme-color" content="#091016" />
@@ -88,9 +113,9 @@ const jsonLd = {
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={pageTitle} />
-    {description && <meta property="og:description" content={description} />}
+    <meta property="og:description" content={metaDescription} />
     <meta property="og:url" content={canonical.href} />
-    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale" content={t.ogLocale} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage} />
@@ -102,7 +127,7 @@ const jsonLd = {
       href="#contenido"
       class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[999] focus:rounded-full focus:bg-bone focus:px-5 focus:py-2 focus:text-sm focus:font-medium focus:text-ink-950"
     >
-      Saltar al contenido
+      {t.actions.skipToContent}
     </a>
 
     <Header />

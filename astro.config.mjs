@@ -29,9 +29,27 @@ const site =
 // https://astro.build/config
 export default defineConfig({
   site,
+  // Spanish is the default and ships unprefixed at `/`; English lives at `/en/`.
+  // `prefixDefaultLocale: false` is what keeps the Spanish URLs clean, which
+  // matters because that is the primary market.
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'en'],
+    routing: { prefixDefaultLocale: false },
+  },
+
   // /estilo is the internal style guide — it ships with the site so the client
   // and any new developer can see the system, but it is not a page to index.
-  integrations: [sitemap({ filter: (page) => !page.includes('/estilo') })],
+  //
+  // The sitemap's own i18n block is what emits the `hreflang` alternates, so
+  // search engines learn the two versions are the same page rather than
+  // duplicates competing with each other.
+  integrations: [
+    sitemap({
+      filter: (page) => !page.includes('/estilo'),
+      i18n: { defaultLocale: 'es', locales: { es: 'es', en: 'en' } },
+    }),
+  ],
   prefetch: { prefetchAll: true, defaultStrategy: 'viewport' },
   image: {
     responsiveStyles: true,

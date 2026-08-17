@@ -1,7 +1,4 @@
 ---
-import Dual from './Dual.astro';
-import type { Dual as DualText } from '../data/dual';
-
 /**
  * The section shell.
  *
@@ -21,8 +18,8 @@ interface Props {
   label: string;
   /** Headline. `<br />` allowed; SplitText animates per line. */
   title?: string;
-  /** Optional standfirst, in both registers. */
-  intro?: DualText;
+  /** Optional standfirst. */
+  intro?: string;
   /** Vertical rhythm. `tight` for stacked sections that belong together. */
   space?: 'default' | 'tight';
   class?: string;
@@ -51,11 +48,9 @@ const { id, label, title, intro, space = 'default', class: className } = Astro.p
         }
         {
           intro && (
-            <Dual
-              text={intro}
-              as="p"
-              class="mt-6 max-w-2xl text-base leading-relaxed text-muted"
-            />
+            <p class="mt-6 max-w-2xl text-base leading-relaxed text-muted" data-reveal>
+              {intro}
+            </p>
           )
         }
       </div>

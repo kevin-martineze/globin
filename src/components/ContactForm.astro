@@ -1,6 +1,6 @@
 ---
 import { site } from '../data/site';
-import { services } from '../data/services';
+import { useContent, toLang } from '../i18n';
 
 /**
  * Contact form that never posts anywhere.
@@ -13,12 +13,15 @@ import { services } from '../data/services';
  * is stored anywhere in between.
  *
  * That also means the form cannot silently fail: if the message does not open,
- * the visitor sees it immediately rather than trusting a "gracias" screen that
+ * the visitor sees it immediately rather than trusting a "thanks" screen that
  * went nowhere.
  *
- * Without JavaScript the form cannot compose anything, so the <noscript> block
- * exposes the two channels directly — never a dead form.
+ * The message template is per-language and lives in `src/i18n/`, so an English
+ * visitor's message arrives in English. The script reads it from `data-`
+ * attributes rather than importing it, which keeps the bundle language-agnostic.
  */
+const t = useContent(toLang(Astro.currentLocale));
+
 const whatsappBase = site.whatsapp ? `https://wa.me/${site.whatsapp}` : '';
 const mailBase = site.email ? `mailto:${site.email}` : '';
 ---
@@ -27,59 +30,63 @@ const mailBase = site.email ? `mailto:${site.email}` : '';
   data-contact-form
   data-whatsapp={whatsappBase}
   data-mail={mailBase}
+  data-greeting={t.form.greeting}
+  data-interested={t.form.interestedIn}
+  data-subject={t.form.emailSubject}
+  data-i-am={t.form.iAm('{name}')}
+  data-i-am-from={t.form.iAmFrom('{name}', '{company}')}
   class="card p-7 lg:p-9"
-  novalidate={false}
 >
-  <p class="eyebrow mb-7">Cuéntanos tu proyecto</p>
+  <p class="eyebrow mb-7">{t.form.kicker}</p>
 
   <div class="space-y-5">
     <div class="grid gap-5 sm:grid-cols-2">
       <label class="block">
-        <span class="mb-2 block text-xs tracking-wide text-muted">Nombre *</span>
+        <span class="mb-2 block text-xs tracking-wide text-muted">{t.form.name}</span>
         <input
           type="text"
           name="nombre"
           required
           autocomplete="name"
-          placeholder="Cómo te llamas"
+          placeholder={t.form.namePlaceholder}
           class="w-full rounded-xl border hairline bg-ink-950/60 px-4 py-3 text-sm text-bone transition-colors duration-300 placeholder:text-muted/60 hover:border-bone/25 focus:border-brand-accent focus:outline-none"
         />
       </label>
 
       <label class="block">
-        <span class="mb-2 block text-xs tracking-wide text-muted">Empresa</span>
+        <span class="mb-2 block text-xs tracking-wide text-muted">{t.form.company}</span>
         <input
           type="text"
           name="empresa"
           autocomplete="organization"
-          placeholder="Opcional"
+          placeholder={t.form.companyOptional}
           class="w-full rounded-xl border hairline bg-ink-950/60 px-4 py-3 text-sm text-bone transition-colors duration-300 placeholder:text-muted/60 hover:border-bone/25 focus:border-brand-accent focus:outline-none"
         />
       </label>
     </div>
 
     <label class="block">
-      <span class="mb-2 block text-xs tracking-wide text-muted">¿Qué necesitas?</span>
+      <span class="mb-2 block text-xs tracking-wide text-muted">{t.form.need}</span>
       <select
         name="servicio"
         class="w-full appearance-none rounded-xl border hairline bg-ink-950/60 px-4 py-3 text-sm text-bone transition-colors duration-300 hover:border-bone/25 focus:border-brand-accent focus:outline-none"
       >
-        {/* "Todavía no lo tengo claro" first and selected: the brief points out
-            that many visitors do not yet know what they need, and a required
-            choice would turn them away at the first field. */}
-        <option value="Todavía no lo tengo claro">Todavía no lo tengo claro</option>
-        {services.map((service) => <option value={service.name}>{service.name}</option>)}
-        <option value="Otra cosa">Otra cosa</option>
+        {/* "Not sure yet" first and selected: the brief points out that many
+            visitors do not yet know what they need, and a required choice would
+            turn them away at the first field. */}
+        <option value={t.form.needUnsure}>{t.form.needUnsure}</option>
+        {t.services.items.map((service) => <option value={service.name}>{service.name}</option>)}
+        <option value={t.form.needOther}>{t.form.needOther}</option>
       </select>
     </label>
 
     <label class="block">
-      <span class="mb-2 block text-xs tracking-wide text-muted">Cuéntanos un poco más *</span>
+      <span class="mb-2 block text-xs tracking-wide text-muted">{t.form.message}</span>
       <textarea
         name="mensaje"
         required
         rows="4"
-        placeholder="Qué problema quieres resolver, o qué te gustaría construir."
+        placeholder={t.form.messagePlaceholder}
         class="w-full resize-y rounded-xl border hairline bg-ink-950/60 px-4 py-3 text-sm leading-relaxed text-bone transition-colors duration-300 placeholder:text-muted/60 hover:border-bone/25 focus:border-brand-accent focus:outline-none"
       ></textarea>
     </label>
@@ -95,7 +102,7 @@ const mailBase = site.email ? `mailto:${site.email}` : '';
       <span
         class="absolute inset-0 -translate-y-full bg-bone transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0"
       ></span>
-      <span class="relative">Enviar por WhatsApp</span>
+      <span class="relative">{t.form.sendWhatsapp}</span>
     </button>
 
     <button
@@ -104,22 +111,19 @@ const mailBase = site.email ? `mailto:${site.email}` : '';
       value="correo"
       class="rounded-full border hairline px-6 py-3.5 text-sm text-bone transition-colors duration-300 hover:border-bone"
     >
-      Enviar por correo
+      {t.form.sendEmail}
     </button>
   </div>
 
-  <p class="mt-5 text-xs leading-relaxed text-muted">
-    El formulario no envía nada por su cuenta: arma el mensaje y lo abre en
-    WhatsApp o en tu correo para que lo revises antes de mandarlo. No guardamos
-    ningún dato.
-  </p>
+  <p class="mt-5 text-xs leading-relaxed text-muted">{t.form.privacy}</p>
 
   <noscript>
-    <p class="mt-5 rounded-xl border border-brand-spark/40 bg-brand-spark/[0.08] px-5 py-4 text-xs leading-relaxed text-bone/85">
-      Este formulario necesita JavaScript para armar el mensaje. Escríbenos
-      directo por
-      {' '}<a href={whatsappBase} class="text-brand-accent underline">WhatsApp</a>{' '}
-      o a <a href={mailBase} class="text-brand-accent underline">{site.email}</a>.
+    <p
+      class="mt-5 rounded-xl border border-brand-spark/40 bg-brand-spark/[0.08] px-5 py-4 text-xs leading-relaxed text-bone/85"
+    >
+      {t.form.noscript}
+      <a href={whatsappBase} class="text-brand-accent underline">WhatsApp</a>
+      · <a href={mailBase} class="text-brand-accent underline">{site.email}</a>
     </p>
   </noscript>
 </form>
@@ -128,15 +132,25 @@ const mailBase = site.email ? `mailto:${site.email}` : '';
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
 
   /** The message the client receives. Plain text: WhatsApp has no formatting. */
-  function buildMessage(data: FormData) {
+  function buildMessage(form: HTMLFormElement, data: FormData) {
     const nombre = String(data.get('nombre') ?? '').trim();
     const empresa = String(data.get('empresa') ?? '').trim();
     const servicio = String(data.get('servicio') ?? '').trim();
     const mensaje = String(data.get('mensaje') ?? '').trim();
 
-    const presentacion = empresa ? `Soy ${nombre}, de ${empresa}.` : `Soy ${nombre}.`;
+    // The sentence templates come from the page's language, filled in here so
+    // the script itself carries no copy.
+    const intro = empresa
+      ? (form.dataset.iAmFrom ?? '').replace('{name}', nombre).replace('{company}', empresa)
+      : (form.dataset.iAm ?? '').replace('{name}', nombre);
 
-    return [`Hola Globin.`, presentacion, `Me interesa: ${servicio}`, '', mensaje].join('\n');
+    return [
+      form.dataset.greeting ?? '',
+      intro,
+      `${form.dataset.interested ?? ''} ${servicio}`,
+      '',
+      mensaje,
+    ].join('\n');
   }
 
   form?.addEventListener('submit', (event) => {
@@ -146,19 +160,17 @@ const mailBase = site.email ? `mailto:${site.email}` : '';
     // localised and screen-reader aware — no reason to reimplement them.
     if (!form.reportValidity()) return;
 
-    const data = new FormData(form);
-    const message = encodeURIComponent(buildMessage(data));
+    const message = encodeURIComponent(buildMessage(form, new FormData(form)));
 
     // `submitter` tells us which of the two buttons was pressed. Keyboard
     // submission (Enter in a field) reports none, so WhatsApp is the default —
     // it is the primary action and the one the brief asks for.
     const submitter = (event as SubmitEvent).submitter as HTMLButtonElement | null;
-    const canal = submitter?.value === 'correo' ? 'correo' : 'whatsapp';
 
-    if (canal === 'correo') {
+    if (submitter?.value === 'correo') {
       const mail = form.dataset.mail;
       if (!mail) return;
-      const subject = encodeURIComponent('Quiero contarles sobre mi proyecto');
+      const subject = encodeURIComponent(form.dataset.subject ?? '');
       window.location.href = `${mail}?subject=${subject}&body=${message}`;
       return;
     }

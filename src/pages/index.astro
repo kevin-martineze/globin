@@ -1,46 +1,13 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import Marquee from '../components/Marquee.astro';
-import Approach from '../components/Approach.astro';
-import Services from '../components/Services.astro';
-import Differentiators from '../components/Differentiators.astro';
-import Process from '../components/Process.astro';
-import Engagements from '../components/Engagements.astro';
-import Faq from '../components/Faq.astro';
-import CtaBand from '../components/CtaBand.astro';
+import Page from '../components/Page.astro';
 
 /**
- * The landing is one long scroll, composed here and nowhere else — read this
- * file to know what the page says and in what order.
+ * Spanish, the default locale — served unprefixed at `/`.
  *
- * The order follows the structure the brief proposes (§9): the problem before
- * the offer, the method before the commercial terms, and the CTA repeated at
- * the end. Section indices run 01–07 and must stay contiguous; `id`s must match
- * `nav` in src/data/site.ts.
+ * The page body lives in `src/components/Page.astro` and is shared with
+ * `/en/`. Anything added here and not there is a difference between languages,
+ * which is the thing to avoid.
  */
-
-// Brand attributes, brief §10. A ticker of adjectives is only defensible when
-// the adjectives are the client's own — these are, verbatim.
-const attributes = [
-  'Ingenio',
-  'Confianza',
-  'Cercanía',
-  'Criterio técnico',
-  'Sinceridad',
-  'Curiosidad',
-  'Capacidad de resolver',
-];
 ---
 
-<Layout>
-  <Hero />
-  <Marquee items={attributes} speed={34} />
-  <Approach />
-  <Services />
-  <Differentiators />
-  <Process />
-  <Engagements />
-  <Faq />
-  <CtaBand />
-</Layout>
+<Page />

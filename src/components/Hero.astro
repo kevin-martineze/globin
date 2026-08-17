@@ -1,7 +1,6 @@
 ---
-import Dual from './Dual.astro';
 import { site, whatsappLink } from '../data/site';
-import { hero } from '../data/copy';
+import { useContent, toLang } from '../i18n';
 
 /**
  * Hero.
@@ -9,27 +8,23 @@ import { hero } from '../data/copy';
  * The backdrop is built, not shot — there is no photography and none is coming.
  * What it is built from matters, though: the first version used a centred glow
  * plus a scattered node mesh, which is the exact backdrop every AI image
- * generator produces and every dark SaaS template ships. Recognisable as a
- * genre, not as Globin.
+ * generator produces and every dark SaaS template ships.
  *
  * This one draws the logo instead. The mark is a sphere with two ribbons
  * orbiting it and ending in arrowheads; the backdrop is those orbits at
  * architectural scale, tilted into perspective and turning slowly in opposite
- * directions. Same idea, brand-specific geometry — nothing about it could be
- * dropped onto another company's site.
+ * directions. Same idea, brand-specific geometry.
  *
  * The other change is the grid: column rules rather than graph paper. Twelve
- * verticals read as a layout structure, which is what a designed page has, and
- * they line up with the type instead of sitting behind it as texture.
- *
- * motion.ts scales `[data-hero-media]` and darkens `[data-hero-veil]` on
- * scroll; if art direction ever supplies an image or a loop, it drops inside
- * the media element and neither has to change.
+ * verticals read as a layout structure, and they line up with the type instead
+ * of sitting behind it as texture.
  */
-const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.');
+const t = useContent(toLang(Astro.currentLocale));
+const whatsapp = whatsappLink(t.form.prefilled);
 ---
 
 <section
+  id="inicio"
   data-hero
   class="grain relative flex min-h-[92svh] items-end overflow-hidden pt-36 pb-16 lg:min-h-screen lg:pb-24"
 >
@@ -45,10 +40,9 @@ const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.'
     <!-- Twelve column rules, aligned to the shell so they land on the type. -->
     <div class="column-rules mask-fade-b absolute inset-0"></div>
 
-    <!-- Orbits: the logo's two ribbons at architectural scale. -->
-    {/* Parked in the upper right. The section is bottom-aligned, so the
-        headline occupies the lower left — the orbits stay out of its way
-        instead of crossing the type. */}
+    {/* Parked in the upper right. The section is bottom-aligned, so the headline
+        occupies the lower left — the orbits stay out of its way instead of
+        crossing the type. */}
     <svg
       class="orbits absolute top-[2%] right-[-16%] h-[62%] w-[82%] opacity-80 lg:right-[-7%] lg:h-[76%] lg:w-[48%] lg:opacity-100"
       viewBox="0 0 100 100"
@@ -112,11 +106,19 @@ const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.'
     </svg>
   </div>
 
-  <!-- Veil sits between backdrop and copy; motion.ts drives it to 0.9 on scroll
-       so the headline stays legible as the section leaves. -->
+  {/* Veils sit outside `[data-hero-media]` so they hold still while the render
+      drifts under them on scroll. The side one is what guarantees headline
+      contrast at any viewport width. */}
+  <div
+    class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-ink-950/95 via-ink-950/70 to-transparent"
+  >
+  </div>
+
+  <!-- motion.ts drives this one to 0.9 on scroll, so the headline stays legible
+       as the section leaves. -->
   <div
     data-hero-veil
-    class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-ink-950 via-ink-950/55 to-transparent opacity-70"
+    class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-ink-950 via-ink-950/45 to-transparent opacity-70"
   >
   </div>
 
@@ -124,31 +126,24 @@ const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.'
     <div class="max-w-4xl">
       <p class="eyebrow mb-7 flex flex-wrap items-center gap-3" data-reveal="fade">
         <span class="inline-block size-1.5 rounded-full bg-brand-accent"></span>
-        Software y soluciones tecnológicas
+        {t.hero.kicker.left}
         <span class="text-bone/25">/</span>
-        Clientes en cualquier país
+        {t.hero.kicker.right}
       </p>
 
-      {/* No `data-split` on dual copy: SplitText would measure the hidden
-          version too and leave a stack of empty masked lines behind the visible
-          one. The wrapper carries the reveal instead. */}
-      {/* One `<h1>` with both versions inside it, rather than two headings: the
-          hidden one is out of the accessibility tree either way, but a crawler
-          reading the source should still find a single top-level heading. */}
       <h1
         class="display text-glow max-w-[15ch] text-[clamp(2.4rem,6.4vw,5.6rem)] text-bone"
-        data-reveal="fade"
-      >
-        <Dual text={hero.headline} />
-      </h1>
+        data-split
+        set:html={t.hero.headline}
+      />
 
-      <div data-reveal data-reveal-delay="0.1">
-        <Dual
-          text={hero.standfirst}
-          as="p"
-          class="mt-9 max-w-2xl text-lg leading-relaxed text-muted"
-        />
-      </div>
+      <p
+        class="mt-9 max-w-2xl text-lg leading-relaxed text-muted"
+        data-reveal
+        data-reveal-delay="0.1"
+      >
+        {t.hero.standfirst}
+      </p>
 
       <div class="mt-11 flex flex-wrap gap-4" data-reveal data-reveal-delay="0.2">
         <a
@@ -158,11 +153,9 @@ const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.'
           <span
             class="absolute inset-0 -translate-y-full bg-bone transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0"
           ></span>
-          <span class="relative">{site.cta}</span>
+          <span class="relative">{t.actions.primary}</span>
         </a>
 
-        {/* The secondary CTA is WhatsApp when a number exists. Until it does, the
-            brief's informative CTA takes the slot rather than a dead button. */}
         {
           whatsapp ? (
             <a
@@ -171,14 +164,14 @@ const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.'
               rel="noopener"
               class="rounded-full border hairline px-7 py-4 text-sm text-bone transition-colors duration-300 hover:border-bone"
             >
-              {site.ctaSecondary}
+              {t.actions.whatsapp}
             </a>
           ) : (
             <a
               href="#servicios"
               class="rounded-full border hairline px-7 py-4 text-sm text-bone transition-colors duration-300 hover:border-bone"
             >
-              Conocer nuestros servicios
+              {t.actions.services}
             </a>
           )
         }
@@ -190,7 +183,7 @@ const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.'
     class="pointer-events-none absolute right-[var(--gutter)] bottom-10 hidden items-center gap-3 lg:flex"
     aria-hidden="true"
   >
-    <span class="eyebrow">{site.tagline}</span>
+    <span class="eyebrow">{t.meta.tagline}</span>
     <span class="block h-12 w-px bg-gradient-to-b from-brand-accent/60 to-transparent"></span>
   </div>
 </section>
@@ -212,8 +205,7 @@ const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.'
     background-size: calc(100% / var(--cols)) 100%;
     /* Both, and in this order: `origin` makes the 1/12 division measure the
        content box (the same width `.shell` gives the type), `clip` stops the
-       rules bleeding into the gutter. Clip alone would size off the padding box
-       and the columns would drift out of step with the layout. */
+       rules bleeding into the gutter. */
     background-origin: content-box;
     background-clip: content-box;
     opacity: 0.9;
@@ -259,7 +251,4 @@ const whatsapp = whatsappLink('Hola Globin, quiero contarles sobre mi proyecto.'
       transform: rotate(360deg);
     }
   }
-
-  /* The global reduced-motion rule collapses animation duration to ~0, which
-     freezes these mid-turn — fine, since the still frame is the composition. */
 </style>

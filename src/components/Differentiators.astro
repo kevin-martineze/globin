@@ -1,7 +1,6 @@
 ---
 import Section from './Section.astro';
-import { differentiators } from '../data/differentiators';
-import { sectionIntros } from '../data/copy';
+import { useContent, toLang } from '../i18n';
 
 /**
  * Five claims as full-width rows rather than cards: they are sentences, not
@@ -9,17 +8,18 @@ import { sectionIntros } from '../data/copy';
  * The accent rule on the left grows on hover — the only movement in the
  * section, so it stays legible as a pointer rather than as decoration.
  */
+const t = useContent(toLang(Astro.currentLocale));
 ---
 
 <Section
   id="diferenciadores"
-  label="Compromisos"
-  title="Tecnología bien pensada,<br />comunicación clara"
-  intro={sectionIntros.differentiators}
+  label={t.differentiators.label}
+  title={t.differentiators.title}
+  intro={t.differentiators.intro}
 >
   <ul class="border-t hairline">
     {
-      differentiators.map((item, index) => (
+      t.differentiators.items.map((item, index) => (
         <li class="group border-b hairline" data-reveal data-reveal-delay={index * 0.05}>
           <div class="relative grid gap-4 py-8 lg:grid-cols-12 lg:gap-10 lg:py-10">
             <span

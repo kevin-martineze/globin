@@ -1,7 +1,8 @@
 ---
 import Section from './Section.astro';
-import { engagements, engagementNote } from '../data/engagements';
-import { sectionIntros } from '../data/copy';
+import { useContent, toLang } from '../i18n';
+
+const t = useContent(toLang(Astro.currentLocale));
 
 /**
  * Two engagement models side by side. No prices anywhere: the brief is explicit
@@ -13,13 +14,13 @@ import { sectionIntros } from '../data/copy';
 
 <Section
   id="modalidades"
-  label="Modalidades"
-  title="Dos formas<br />de trabajar juntos"
-  intro={sectionIntros.engagements}
+  label={t.engagements.label}
+  title={t.engagements.title}
+  intro={t.engagements.intro}
 >
   <div class="grid gap-5 lg:grid-cols-2">
     {
-      engagements.map((engagement, index) => (
+      t.engagements.items.map((engagement, index) => (
         <article class="card flex flex-col p-8 lg:p-10" data-reveal data-reveal-delay={index * 0.1}>
           <p class="font-mono text-[0.7rem] tracking-[0.2em] text-brand-accent/80 uppercase">
             {engagement.kicker}
@@ -50,6 +51,6 @@ import { sectionIntros } from '../data/copy';
   </div>
 
   <p class="mt-10 max-w-2xl text-sm leading-relaxed text-muted" data-reveal>
-    {engagementNote}
+    {t.engagements.note}
   </p>
 </Section>

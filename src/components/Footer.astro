@@ -1,7 +1,11 @@
 ---
 import { Image } from 'astro:assets';
-import { nav, site } from '../data/site';
+import { site } from '../data/site';
 import { brand } from '../data/media';
+import { useContent, toLang } from '../i18n';
+
+const lang = toLang(Astro.currentLocale);
+const t = useContent(lang);
 
 const year = new Date().getFullYear();
 
@@ -12,8 +16,6 @@ const socials = [
   { label: 'LinkedIn', href: site.social.linkedin, handle: site.handles.linkedin },
   { label: 'GitHub', href: site.social.github, handle: site.handles.github },
 ].filter((item) => Boolean(item.href));
-
-const hasContact = Boolean(site.phone || site.email || site.country || socials.length);
 ---
 
 <footer class="border-t hairline bg-ink-950 pt-16 pb-10">
@@ -32,87 +34,79 @@ const hasContact = Boolean(site.phone || site.email || site.country || socials.l
           />
           <span class="display-tight text-lg leading-[1.15] text-bone">{site.name}</span>
         </div>
-        {
-          site.description && (
-            <p class="mt-6 max-w-sm text-sm leading-relaxed text-muted">{site.description}</p>
-          )
-        }
-        {
-          site.coverage && (
-            <p class="mt-4 max-w-sm text-sm leading-relaxed text-muted">{site.coverage}</p>
-          )
-        }
+        <p class="mt-6 max-w-sm text-sm leading-relaxed text-muted">{t.meta.description}</p>
+        <p class="mt-4 max-w-sm text-sm leading-relaxed text-muted">{t.closing.coverage}</p>
       </div>
 
-      {
-        nav.length > 0 && (
-          <nav aria-label="Pie de página" class="lg:col-span-3">
-            <p class="eyebrow mb-5">Navegación</p>
-            <ul class="space-y-3">
-              {nav.map((item) => (
+      <nav aria-label={t.footer.navLabel} class="lg:col-span-3">
+        <p class="eyebrow mb-5">{t.footer.navLabel}</p>
+        <ul class="space-y-3">
+          {
+            t.nav.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="text-sm text-bone/80 transition-colors duration-300 hover:text-brand-accent"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="lg:col-span-4">
+        <p class="eyebrow mb-5">{t.footer.contactLabel}</p>
+        <ul class="space-y-3 text-sm text-bone/80">
+          {
+            site.phone && (
+              <li>
+                <a href={`tel:${site.phone.replace(/\s/g, '')}`} class="hover:text-brand-accent">
+                  {site.phone}
+                </a>
+              </li>
+            )
+          }
+          {
+            site.email && (
+              <li>
+                <a href={`mailto:${site.email}`} class="hover:text-brand-accent">
+                  {site.email}
+                </a>
+              </li>
+            )
+          }
+          <li class="text-muted">{site.country}</li>
+        </ul>
+
+        {
+          socials.length > 0 && (
+            <ul class="mt-6 space-y-3">
+              {socials.map((item) => (
                 <li>
                   <a
                     href={item.href}
-                    class="text-sm text-bone/80 transition-colors duration-300 hover:text-brand-accent"
+                    target="_blank"
+                    rel="noopener"
+                    class="text-sm text-bone/80 hover:text-brand-accent"
                   >
                     {item.label}
+                    {item.handle && <span class="text-muted"> {item.handle}</span>}
                   </a>
                 </li>
               ))}
             </ul>
-          </nav>
-        )
-      }
-
-      {
-        hasContact && (
-          <div class="lg:col-span-4">
-            <p class="eyebrow mb-5">Contacto</p>
-            <ul class="space-y-3 text-sm text-bone/80">
-              {site.phone && (
-                <li>
-                  <a href={`tel:${site.phone.replace(/\s/g, '')}`} class="hover:text-brand-accent">
-                    {site.phone}
-                  </a>
-                </li>
-              )}
-              {site.email && (
-                <li>
-                  <a href={`mailto:${site.email}`} class="hover:text-brand-accent">
-                    {site.email}
-                  </a>
-                </li>
-              )}
-              {site.country && <li class="text-muted">{site.country}</li>}
-            </ul>
-
-            {socials.length > 0 && (
-              <ul class="mt-6 space-y-3">
-                {socials.map((item) => (
-                  <li>
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener"
-                      class="text-sm text-bone/80 hover:text-brand-accent"
-                    >
-                      {item.label}
-                      {item.handle && <span class="text-muted"> {item.handle}</span>}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )
-      }
+          )
+        }
+      </div>
     </div>
 
     <div
       class="mt-14 flex flex-wrap items-center justify-between gap-4 border-t hairline pt-6 text-xs text-muted"
     >
-      <p>© {year} {site.name}. Todos los derechos reservados.</p>
-      {site.tagline && <p>{site.tagline}</p>}
+      <p>© {year} {site.name}. {t.footer.rights}</p>
+      <p>{t.meta.tagline}</p>
     </div>
   </div>
 </footer>

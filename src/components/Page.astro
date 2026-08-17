@@ -1,0 +1,40 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from './Hero.astro';
+import Marquee from './Marquee.astro';
+import Approach from './Approach.astro';
+import Services from './Services.astro';
+import Differentiators from './Differentiators.astro';
+import Process from './Process.astro';
+import Engagements from './Engagements.astro';
+import Faq from './Faq.astro';
+import CtaBand from './CtaBand.astro';
+import { useContent, toLang } from '../i18n';
+
+/**
+ * The landing itself, composed once and rendered by both language routes
+ * (`/` and `/en/`). Every component reads `Astro.currentLocale` for its own
+ * copy, so the page order is defined in one place and cannot drift between
+ * languages — which is exactly how a second language usually rots.
+ *
+ * The order follows the structure the brief proposes (§9): the problem before
+ * the offer, the method before the commercial terms, and the CTA repeated at
+ * the end. Section `id`s are identical in both languages so the anchors, the
+ * index rail and any shared link keep working across the switch.
+ */
+const t = useContent(toLang(Astro.currentLocale));
+---
+
+<Layout>
+  <Hero />
+  {/* Brand attributes, brief §10. A ticker of adjectives is only defensible
+      when the adjectives are the client's own — these are. */}
+  <Marquee items={t.attributes} speed={34} />
+  <Approach />
+  <Services />
+  <Differentiators />
+  <Process />
+  <Engagements />
+  <Faq />
+  <CtaBand />
+</Layout>

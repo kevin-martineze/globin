@@ -1,8 +1,9 @@
 ---
 import { Image } from 'astro:assets';
-import Dual from './Dual.astro';
-import { phases, processIntro } from '../data/process';
 import { textures } from '../data/media';
+import { useContent, toLang } from '../i18n';
+
+const t = useContent(toLang(Astro.currentLocale));
 
 /**
  * The method as a pinned horizontal rail (`data-rail` in motion.ts): on desktop
@@ -36,15 +37,15 @@ import { textures } from '../data/media';
 
   <div class="shell">
     <div class="max-w-3xl">
-      <p class="eyebrow mb-6" data-reveal="fade">Proceso</p>
-      <h2 class="display text-[clamp(2.1rem,4.6vw,4.2rem)] text-bone" data-split>
-        De la idea<br />al producto
-      </h2>
-      <Dual
-        text={processIntro}
-        as="p"
-        class="mt-6 max-w-xl text-base leading-relaxed text-muted"
+      <p class="eyebrow mb-6" data-reveal="fade">{t.process.label}</p>
+      <h2
+        class="display text-[clamp(2.1rem,4.6vw,4.2rem)] text-bone"
+        data-split
+        set:html={t.process.title}
       />
+      <p class="mt-6 max-w-xl text-base leading-relaxed text-muted" data-reveal>
+        {t.process.intro}
+      </p>
     </div>
   </div>
 
@@ -53,7 +54,7 @@ import { textures } from '../data/media';
     class="mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-[var(--gutter)] pb-4 lg:mt-20 lg:snap-none lg:overflow-visible lg:pb-0"
   >
     {
-      phases.map((phase) => (
+      t.process.phases.map((phase) => (
         <article class="card flex w-[82vw] max-w-[24rem] shrink-0 snap-start flex-col p-8 lg:w-[26rem] lg:max-w-none lg:p-10">
           <div class="flex items-center gap-4">
             <span class="font-mono text-xs text-brand-accent">{phase.index}</span>
@@ -61,7 +62,7 @@ import { textures } from '../data/media';
           </div>
 
           <h3 class="display-tight mt-7 text-[1.7rem] text-bone">{phase.title}</h3>
-          <Dual text={phase.body} as="p" class="mt-5 flex-1 text-sm leading-relaxed text-muted" />
+          <p class="mt-5 flex-1 text-sm leading-relaxed text-muted">{phase.body}</p>
 
           {/* The brief's original eight stages, kept visible under the summary so
               the simplification never hides the method. */}
@@ -78,7 +79,6 @@ import { textures } from '../data/media';
   </div>
 
   <p class="shell mt-10 max-w-xl text-xs leading-relaxed text-muted lg:mt-12">
-    Adaptamos el marco de trabajo al tamaño de cada proyecto. En proyectos
-    pequeños, un proceso más simple suele ser la mejor decisión.
+    {t.process.note}
   </p>
 </section>

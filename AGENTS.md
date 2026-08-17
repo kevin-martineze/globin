@@ -16,11 +16,12 @@ open values in `src/data/` carry a `TODO(brief)` comment.
 
 ## Conventions
 
-- **Content lives in `src/data/*.ts`**, never in markup. Components render.
-- **New body copy is written in both registers** unless there is a reason not
-  to. Type it `Dual` and render it through `Dual.astro`; see the register
-  section in the README for how to write the pair. Copy that ships in only one
-  voice makes the switch look broken.
+- **Copy lives in `src/i18n/{es,en}.ts`**, never in markup, and always in both
+  languages — the `Content` interface makes a missing translation a build error,
+  so never widen a type to dodge one. `src/data/` is for facts with no words in
+  them (phone, email, country, images).
+- **Section `id`s and anchor `href`s stay Spanish in both languages.** They are
+  page ids, not copy; translating them breaks the index rail and shared links.
 - **Colour is referenced by role**, never as a raw hex or a stock Tailwind
   colour. The palette in `@theme` is sampled from the logo and may be resampled
   when the identity is finalised; components that use tokens survive that

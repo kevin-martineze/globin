@@ -67,48 +67,44 @@ Each FAQ entry carries a `source` field naming the section of the brief it comes
 from. It is never rendered; it exists so the page can be audited against the
 document.
 
-## The register switch
+## Languages
 
-The page reads in two voices, and a switch in the header decides which one is on
-screen: `simple`, written for someone who runs a business, and `tecnico`,
-written for someone who builds software.
+Spanish at `/`, English at `/en/`. Spanish is the default locale and ships
+unprefixed, because it is the primary market.
 
-It is the site's one distinguishing mechanic, and it is not decoration. The
-brief names it twice: §10 contrasts the two ways of saying the same thing and
-asks for the plain one by default, and §5 lists "el cliente no debería tener que
-dominar la tecnología para poder trabajar con el equipo" as a differentiator.
-The switch demonstrates that claim instead of printing it.
+**All copy lives in `src/i18n/`.** One `Content` interface in `types.ts`, two
+files that implement it. TypeScript is the entire translation workflow: adding a
+key to the Spanish file breaks the build until English has it too, which is the
+only reliable way to stop a two-language site from decaying into one and a half.
 
-How it works:
+`src/data/` holds only what is the same in every language — phone number, email,
+country, social URLs, images. Keeping the two apart is what stops a translation
+from quietly changing a contact detail.
 
-- Dual strings live in the data files typed as `Dual` (`src/data/dual.ts`), and
-  `Dual.astro` renders **both** versions into the DOM.
-- CSS in `global.css` shows one and hides the other, keyed off `data-register`
-  on `<html>`. No request, no reflow surprise, both voices crawlable, and the
-  page still reads with JavaScript disabled.
-- The choice persists in `localStorage` and is re-applied by an inline script in
-  `<head>` **before first paint** — a returning visitor who chose the technical
-  voice must not watch the simple one flash first.
-- `RegisterToggle.astro` is a radio group, not two buttons: one exclusive
-  choice, so arrow-key navigation and the right announcement come for free. Both
-  instances (header and mobile menu) share one state.
-- Swapping changes text length, so every scroll trigger measured before it is
-  stale. The toggle fires `register:change` and `motion.ts` refreshes
-  ScrollTrigger on the next frame.
+Components read their own copy:
 
-Writing the pair is a content rule, not a styling one: same claim, different
-vocabulary; the technical voice explains *how* and never promises anything the
-simple one did not; no technology brand names, because the brief names
-capabilities and never products.
+```astro
+const t = useContent(toLang(Astro.currentLocale));
+```
 
-What is deliberately single-register: the FAQ (practical questions read the same
-either way), the differentiators (commitments, not explanations) and the service
-scope tags (a list of what is covered).
+The page body is composed once in `src/components/Page.astro` and rendered by
+both routes, so the section order cannot drift between languages. Section `id`s
+and anchor `href`s stay Spanish in both — they are page ids, not copy, and
+translating them would break the index rail and any shared link.
 
-Note for anything with a heading: put the `<Dual>` **inside** one `<h1>`/`<h2>`
-rather than rendering the heading twice, and never put `data-split` on dual
-copy — SplitText would measure the hidden version too and leave empty masked
-lines stacked behind the visible one.
+**Language detection** runs once, inline in `<head>`, before first paint. It
+reads `navigator.language`, **not** the IP: a Colombian abroad speaks Spanish
+and a foreign client in Bogotá does not, so geolocation gets both wrong. Google
+also advises against IP redirects, which can lock crawlers out of a version.
+
+The moment anyone uses the switch — or is redirected once — the choice goes into
+`localStorage` and is never overridden again. `location.replace` keeps the back
+button working. `LanguageSwitch.astro` is a plain link to the other locale, so
+it works before hydration and cannot desync from the route.
+
+`hreflang` alternates (plus `x-default`) are emitted in the layout, and the
+sitemap integration is configured with the same locales so the two versions are
+declared as one page in two languages rather than as competing duplicates.
 
 ## Design system
 

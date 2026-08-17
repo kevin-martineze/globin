@@ -1,5 +1,8 @@
 ---
-import { sections } from '../data/site';
+import { useContent, toLang } from '../i18n';
+
+const t = useContent(toLang(Astro.currentLocale));
+const sections = t.sections;
 
 /**
  * Fixed index rail, desktop only.
@@ -15,7 +18,7 @@ import { sections } from '../data/site';
  */
 ---
 
-<nav data-side-index class="side-index" aria-label="Índice de secciones">
+<nav data-side-index class="side-index" aria-label={t.footer.navLabel}>
   <ol>
     {
       sections.map((section, index) => (

@@ -262,18 +262,6 @@ function initCounters() {
   });
 }
 
-/**
- * The register switch replaces every dual paragraph with a different-length
- * one, so every trigger position measured before the swap is now wrong. The
- * toggle fires this event; a refresh on the next frame lets the new text lay
- * out first.
- */
-function initRegisterRefresh() {
-  document.addEventListener('register:change', () => {
-    requestAnimationFrame(() => ScrollTrigger.refresh());
-  });
-}
-
 function boot() {
   initSmoothScroll();
   initHeader();
@@ -285,7 +273,6 @@ function boot() {
   initHero();
   initInViewVideos();
   initCounters();
-  initRegisterRefresh();
 
   // Fonts change line boxes, which changes every trigger position.
   void document.fonts?.ready.then(() => ScrollTrigger.refresh());
