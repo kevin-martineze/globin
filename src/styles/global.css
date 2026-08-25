@@ -1,19 +1,23 @@
 @import "tailwindcss";
 
 /* Self-hosted variable fonts.
-   - Fraunces for headlines. The `full` build carries the optical-size, SOFT and
-     WONK axes, and WONK is the reason it is here: it swaps in the quirky
-     single-storey letterforms that give the voice its edge. A serif display on
-     a software site is unusual on purpose — the brand is "ingenio", not
-     "enterprise", and every competitor is set in a grotesque.
-   - Manrope for body copy: the brief asks for "una sans serif moderna y
-     legible", and its slightly geometric build keeps it from reading as the
-     default Inter everyone ships.
+   - Bricolage Grotesque for headlines. The page used to be set in Fraunces with
+     its WONK axis on, which is a characterful display serif; at display size it
+     read as an editorial or a design studio rather than as the software firm
+     that is actually selling here, and the buyer the brief describes — a small
+     or mid-sized company deciding who to trust with its systems — is not the
+     reader that voice was written for. Bricolage keeps the page from being
+     generic anyway: it carries optical-size and width axes and a slightly
+     irregular build, so it is a grotesque with a hand in it rather than the
+     neutral default.
+   - Inter for body copy: the brief asks for "una sans serif moderna y legible",
+     and this is the one nobody has to think about. The display face is where
+     the character belongs; the paragraph is where it costs comprehension.
    - JetBrains Mono only for micro-labels — the section index, tags, technical
      asides. That is the brief's "elementos de código, usados con moderación";
      it never sets a paragraph. */
-@import "@fontsource-variable/fraunces/full.css";
-@import "@fontsource-variable/manrope";
+@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource-variable/inter";
 @import "@fontsource-variable/jetbrains-mono";
 @import "lenis/dist/lenis.css";
 
@@ -58,8 +62,8 @@
   --color-bone: #f1f5f3;
   --color-muted: #8a9a94;
 
-  --font-display: "Fraunces Variable", "Fraunces", ui-serif, Georgia, serif;
-  --font-sans: "Manrope Variable", "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", monospace;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -140,22 +144,22 @@
 @layer components {
   /* Headlines. Sentence case, never uppercase: an all-caps display line is the
      single loudest thing a layout can borrow from another site, and this one
-     needs its own voice. WONK on, optical size pushed to the display end, and
-     SOFT low so the terminals stay crisp at large sizes. */
+     needs its own voice. Optical size pushed to the display end and the width
+     axis left at normal — a condensed headline is a magazine cover, and this
+     page is selling systems, not a story. */
   .display {
     font-family: var(--font-display);
     font-variation-settings:
-      "wght" 640,
-      "opsz" 144,
-      "SOFT" 12,
-      "WONK" 1;
-    line-height: 0.94;
+      "wght" 700,
+      "opsz" 96,
+      "wdth" 100;
+    line-height: 0.96;
     letter-spacing: -0.03em;
   }
 
-  /* `<em>` inside a headline marks the brand word, not emphasis-as-italic. The
-     italic build is not loaded, so leaving font-style alone would let the
-     browser synthesise a slanted Fraunces, which looks broken at display size. */
+  /* `<em>` inside a headline marks the brand word, not emphasis-as-italic. No
+     italic build is loaded, so leaving font-style alone would let the browser
+     synthesise a slanted face, which looks broken at display size. */
   .display em,
   .display-tight em {
     font-style: normal;
@@ -163,16 +167,15 @@
   }
 
   /* Same voice at card scale. Optical size drops with it — that is the whole
-     point of the axis, and skipping it is what makes big serifs look thin and
-     small serifs look clumsy. */
+     point of the axis, and skipping it is what makes big type look thin and
+     small type look clumsy. */
   .display-tight {
     font-family: var(--font-display);
     font-variation-settings:
-      "wght" 600,
-      "opsz" 32,
-      "SOFT" 20,
-      "WONK" 1;
-    line-height: 1.02;
+      "wght" 650,
+      "opsz" 24,
+      "wdth" 100;
+    line-height: 1.06;
     letter-spacing: -0.015em;
   }
 
