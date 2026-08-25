@@ -92,7 +92,7 @@ Ninguna bloquea el desarrollo, pero cada una cambia el copy si se resuelve:
 - Proceso de cotización y condiciones de soporte y mantenimiento.
 - Servicios con mayor prioridad — hoy destacan "Software a medida" y
   "Aplicaciones móviles"; cambiarlo es mover la bandera `featured` en
-  `src/data/services.ts`.
+  `services.items` dentro de `src/i18n/es.ts` y `src/i18n/en.ts`.
 - Portafolio público futuro. El brief prohíbe inventar clientes, testimonios,
   cifras o casos de éxito, así que esa sección no existe hasta que haya material
   real.

@@ -85,8 +85,7 @@ export const es: Content = {
         name: 'Software a medida',
         summary:
           'Aplicaciones y plataformas diseñadas según los procesos, objetivos y necesidades específicas de tu empresa.',
-        detail: 'Sistemas internos · plataformas de gestión · productos digitales',
-        icon: 'blocks',
+        detail: 'Sistemas internos · Plataformas de gestión · Productos digitales',
         featured: true,
       },
       {
@@ -94,8 +93,7 @@ export const es: Content = {
         name: 'Aplicaciones móviles',
         summary:
           'Apps para Android, iOS o ambas plataformas, con una experiencia coherente y preparada para crecer.',
-        detail: 'Android · iOS · multiplataforma',
-        icon: 'device',
+        detail: 'Android · iOS · Multiplataforma',
         featured: true,
       },
       {
@@ -103,32 +101,28 @@ export const es: Content = {
         name: 'Plataformas web y ecommerce',
         summary:
           'Sitios web, portales empresariales, plataformas digitales y tiendas en línea orientadas a captar clientes o facilitar tus operaciones.',
-        detail: 'Sitios corporativos · portales · tiendas en línea',
-        icon: 'window',
+        detail: 'Sitios corporativos · Portales · Tiendas en línea',
       },
       {
         id: 'automatizacion',
         name: 'Automatización e integraciones',
         summary:
           'Digitalizamos las tareas repetitivas y conectamos tus herramientas para reducir errores, ahorrar tiempo y tener la información en un solo lugar.',
-        detail: 'Backend · APIs · integraciones entre sistemas',
-        icon: 'flow',
+        detail: 'Backend · APIs · Integraciones entre sistemas',
       },
       {
         id: 'cloud-devops',
         name: 'Cloud y DevOps',
         summary:
           'Preparamos tu solución para crecer, desplegar cambios con seguridad y mantenerse estable a medida que aumentan tus usuarios.',
-        detail: 'Nube · servidores · contenedores · CI/CD · ambientes escalables',
-        icon: 'cloud',
+        detail: 'Nube · Servidores · Contenedores · CI/CD · Ambientes escalables',
       },
       {
         id: 'soporte-evolucion',
         name: 'Soporte y evolución',
         summary:
           'El lanzamiento no es el final: mantenimiento, mejoras, monitoreo y desarrollo continuo para que la solución siga acompañando al negocio.',
-        detail: 'Mantenimiento correctivo · monitoreo · nuevas funcionalidades',
-        icon: 'pulse',
+        detail: 'Mantenimiento correctivo · Monitoreo · Nuevas funcionalidades',
       },
     ],
   },

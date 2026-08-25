@@ -5,25 +5,44 @@ import { useContent, toLang } from '../i18n';
 const t = useContent(toLang(Astro.currentLocale));
 
 /**
- * Six services in an even three-column grid. The brief asks for uneven
- * prominence, which here is colour rather than size: the two featured cards get
- * the accent border and icon while every card keeps the same footprint. Spanning
- * cells instead would leave an orphan in the last row at six items.
+ * Six services as one ruled sheet, not six cards.
+ *
+ * The card version of this section was the most borrowed thing on the page: a
+ * line icon in a rounded square, a tinted panel per item, a hover that lifts
+ * the box. That shape is the default output of every dark software template,
+ * and three other sections here already use `.card` — a fourth card grid made
+ * the page read as one component repeated six times.
+ *
+ * So this is a sheet with six compartments instead. The hairlines are the same
+ * device the symptom list in `Approach.astro` uses (`gap-px` over an edge-
+ * coloured ground, the outer corners rounded once), applied at grid scale: the
+ * page reuses its own vocabulary rather than importing another one.
+ *
+ * The icons are gone. Six generic glyphs said nothing the names do not — a
+ * cube does not explain "software a medida" — and they were the loudest tell.
+ * What opens each compartment instead is a graduation: the index and a tick
+ * that grows, which is the index rail's own gesture at card scale. The page now
+ * has a single hover vocabulary, a rule that grows, shared by the rail, the
+ * differentiator rows and this.
+ *
+ * Prominence (brief §9 asks for it uneven) is typographic rather than a tint:
+ * the two featured services carry the accent graduation, a step up in display
+ * size and a lighter ground. A teal wash over a box was decoration standing in
+ * for hierarchy.
+ *
+ * The technical register is set as a list rather than as one mono run-on. It is
+ * the same data — the `detail` string, split on its own separator — but a stack
+ * of terms on graduation marks reads as a legend on a drawing, which is what it
+ * actually is. AGENTS.md keeps it second and small; it is never the first thing
+ * the reader meets.
  */
 
-// Icons are 24x24, 1.5 stroke, drawn on the same grid so they read as a set.
-const icons: Record<string, string> = {
-  blocks:
-    '<path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3z"/><path d="M17 13v8M13 17h8"/>',
-  device:
-    '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10.5 18.5h3"/>',
-  window:
-    '<rect x="2.5" y="4" width="19" height="16" rx="2.5"/><path d="M2.5 9h19M6 6.5h.01M9 6.5h.01"/>',
-  flow: '<circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="12" r="2.5"/><circle cx="5" cy="18" r="2.5"/><path d="M7.5 6h5a4 4 0 0 1 4 4v.5M7.5 18h5a4 4 0 0 0 4-4v-.5"/>',
-  cloud:
-    '<path d="M7 18h10a4 4 0 0 0 .8-7.9A6 6 0 0 0 6.3 9.4 3.8 3.8 0 0 0 7 18Z"/><path d="M12 13.5v4M10 15.5l2-2 2 2"/>',
-  pulse: '<path d="M2.5 12h4l2.5-6 4 12 2.5-6h6"/>',
-};
+/** `detail` is written as `term · term · term` in every locale. */
+const terms = (detail: string) =>
+  detail
+    .split('·')
+    .map((term) => term.trim())
+    .filter(Boolean);
 ---
 
 <Section
@@ -32,48 +51,78 @@ const icons: Record<string, string> = {
   title={t.services.title}
   intro={t.services.intro}
 >
-  <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+  <div
+    class="grid gap-px overflow-hidden rounded-2xl border hairline bg-[var(--edge)] md:grid-cols-2 lg:grid-cols-3"
+  >
     {
       t.services.items.map((service, index) => (
         <article
           id={service.id}
-          data-reveal
-          data-reveal-delay={index * 0.07}
           class:list={[
-            'card group flex flex-col p-8',
-            service.featured && 'border-brand-accent/40 bg-brand-accent/[0.06]',
+            'group relative flex flex-col p-8 transition-colors duration-500 lg:p-10',
+            service.featured
+              ? 'bg-ink-900 hover:bg-ink-800/80'
+              : 'bg-ink-950 hover:bg-ink-900/70',
           ]}
         >
-          <span
-            class:list={[
-              'grid size-11 place-items-center rounded-xl border transition-colors duration-500',
-              service.featured
-                ? 'border-brand-accent/40 text-brand-accent'
-                : 'hairline text-bone/70 group-hover:text-brand-accent',
-            ]}
-            aria-hidden="true"
+          {/* The reveal is on the contents, not on the compartment: fading the
+              compartment itself would show the sheet's edge-coloured ground
+              through it and start the section as a solid slab. */}
+          <div
+            class="flex flex-1 flex-col"
+            data-reveal
+            data-reveal-delay={index * 0.07}
           >
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              set:html={icons[service.icon]}
-            />
-          </span>
+            <div class="flex items-center gap-3.5">
+              <span
+                class:list={[
+                  'font-mono text-[0.7rem] tracking-[0.18em] tabular-nums',
+                  service.featured ? 'text-brand-accent' : 'text-bone/45',
+                ]}
+              >
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <span
+                class:list={[
+                  'h-px transition-[width,background-color] duration-500 ease-[var(--ease-out-expo)]',
+                  service.featured
+                    ? 'w-16 bg-brand-accent'
+                    : 'w-6 bg-bone/25 group-hover:w-16 group-hover:bg-brand-accent',
+                ]}
+                aria-hidden="true"
+              />
+            </div>
 
-          <h3 class="display-tight mt-7 text-2xl text-bone">{service.name}</h3>
-          <p class="mt-4 flex-1 text-sm leading-relaxed text-muted">{service.summary}</p>
+            <h3
+              class:list={[
+                'display-tight mt-8 text-bone',
+                service.featured ? 'text-[2rem]' : 'text-[1.5rem]',
+              ]}
+            >
+              {service.name}
+            </h3>
 
-          {/* The technical register, kept small and in mono: there for the
-              reader who wants it, ignorable for the one who does not. */}
-          <p class="mt-7 border-t hairline pt-5 font-mono text-[0.7rem] leading-relaxed tracking-wide text-bone/45">
-            {service.detail}
-          </p>
+            <p
+              class:list={[
+                'mt-4 flex-1 text-sm leading-relaxed',
+                service.featured ? 'text-bone/75' : 'text-muted',
+              ]}
+            >
+              {service.summary}
+            </p>
+
+            <ul class="mt-9 space-y-2.5 border-t hairline pt-6">
+              {terms(service.detail).map((term) => (
+                <li class="flex items-center gap-3 font-mono text-[0.68rem] tracking-wide text-bone/40 transition-colors duration-500">
+                  <span
+                    class="h-px w-2 shrink-0 bg-bone/25 transition-colors duration-500 group-hover:bg-brand-accent/70"
+                    aria-hidden="true"
+                  />
+                  {term}
+                </li>
+              ))}
+            </ul>
+          </div>
         </article>
       ))
     }

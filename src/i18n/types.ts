@@ -14,10 +14,13 @@ export interface Service {
   id: string;
   name: string;
   summary: string;
-  /** Scope tag, set small and in mono. Technical vocabulary belongs here. */
+  /**
+   * The technical register, in mono and always second. Written as
+   * `term · term · term`: Services.astro splits on the separator and sets the
+   * terms as a list, so the middot is structure, not punctuation.
+   */
   detail: string;
-  icon: 'blocks' | 'device' | 'window' | 'flow' | 'cloud' | 'pulse';
-  /** Two cards lead the grid; the brief asks for uneven prominence (§9). */
+  /** Two services lead the sheet; the brief asks for uneven prominence (§9). */
   featured?: boolean;
 }
 

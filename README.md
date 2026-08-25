@@ -39,11 +39,11 @@ and nowhere else — read that file to know what the site says and in what order
 | — | Hero | `Hero.astro` | brief §9 |
 | — | Attribute ticker | `Marquee.astro` | brief §10 |
 | 01 | Problem + solution | `Approach.astro` | brief §9, §4 |
-| 02 | Services | `Services.astro` | `data/services.ts` |
-| 03 | Differentiators | `Differentiators.astro` | `data/differentiators.ts` |
-| 04 | Process | `Process.astro` | `data/process.ts` |
-| 05 | Engagement models | `Engagements.astro` | `data/engagements.ts` |
-| 06 | FAQ | `Faq.astro` | `data/faq.ts` |
+| 02 | Services | `Services.astro` | `i18n/*.ts` → `services.items` |
+| 03 | Differentiators | `Differentiators.astro` | `i18n/*.ts` → `differentiators.items` |
+| 04 | Process | `Process.astro` | `i18n/*.ts` → `process.phases` |
+| 05 | Engagement models | `Engagements.astro` | `i18n/*.ts` → `engagements.items` |
+| 06 | FAQ | `Faq.astro` | `i18n/*.ts` → `faq.items` |
 | 07 | Closing CTA | `CtaBand.astro` | brief §9 |
 
 Section indices are contiguous and each `id` matches an entry in `nav`
@@ -141,8 +141,18 @@ the browser synthesise a slanted Fraunces.
 
 **Layout.** `.shell` (max 96rem plus a fluid gutter) is the only container.
 `.hairline` is every border on the page, so contrast is tuned in one place.
-`.card` is the one card treatment, declared once because six sections use it and
+`.card` is the one card treatment, declared once because four sections use it and
 drift between them is what makes a page look assembled rather than designed.
+
+Services is deliberately **not** one of them. It is a ruled sheet: six
+compartments separated by hairlines (`gap-px` over an edge-coloured ground, the
+outer corners rounded once — the same device as the symptom list in
+`Approach.astro`, at grid scale). It carries no icons, because six generic
+glyphs said nothing the service names do not and were the loudest borrowed thing
+on the page, and prominence there is typographic — display size, an accent
+graduation and a lighter ground — rather than a tinted panel. With three other
+sections already built from `.card`, a fourth card grid made the page read as
+one component repeated.
 
 Sections carry a label in the margin, not a number in the heading: the running
 order is the job of `SideIndex.astro`, a fixed rail that tracks scroll on
