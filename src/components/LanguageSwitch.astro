@@ -2,11 +2,16 @@
 import { toLang, otherLang, localePath, useContent } from '../i18n';
 
 /**
- * Two-language switch.
+ * Two-language switch, set as the pair of ISO codes with the current one lit.
  *
- * A plain link to the other language's page, not a script: it works before
- * hydration, it is crawlable, and it cannot desync from the route the way a
- * scripted toggle can.
+ * Showing both is what makes it readable at a glance: a control that says only
+ * "English" leaves the visitor working out whether that is the state or the
+ * action. The codes need no translation, so nothing here is copy — the words
+ * live in `language`, and they are what the link announces to a screen reader.
+ *
+ * It is still a plain link to the other language's page, not a script: it works
+ * before hydration, it is crawlable, and it cannot desync from the route the way
+ * a scripted toggle can.
  *
  * Clicking it records the choice, which is what stops the first-visit
  * auto-redirect in Layout.astro from ever overriding a deliberate decision.
@@ -19,23 +24,19 @@ const target = otherLang(lang);
 const t = useContent(lang);
 ---
 
-<a
-  data-lang-switch={target}
-  href={localePath(target)}
-  hreflang={target}
-  lang={target}
-  aria-label={`${t.language.label}: ${t.language.switchTo}`}
-  class="flex items-center gap-1.5 rounded-full border hairline px-3 py-2 font-mono text-[0.68rem] tracking-[0.12em] text-muted uppercase transition-colors duration-300 hover:border-bone/40 hover:text-bone"
->
-  <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-    <circle cx="7" cy="7" r="5.6" stroke="currentColor" stroke-width="1.1"></circle>
-    <path
-      d="M1.4 7h11.2M7 1.4c1.6 1.7 2.4 3.6 2.4 5.6S8.6 10.9 7 12.6C5.4 10.9 4.6 9 4.6 7S5.4 3.1 7 1.4Z"
-      stroke="currentColor"
-      stroke-width="1.1"></path>
-  </svg>
-  {t.language.switchTo}
-</a>
+<div class="flex items-center gap-2 font-mono text-[0.68rem] tracking-[0.14em] uppercase">
+  <span class="text-bone" aria-current="true">{lang}</span>
+  <span class="text-bone/25" aria-hidden="true">·</span>
+  <a
+    data-lang-switch={target}
+    href={localePath(target)}
+    hreflang={target}
+    aria-label={`${t.language.label}: ${t.language.switchTo}`}
+    class="text-muted transition-colors duration-300 hover:text-bone"
+  >
+    {target}
+  </a>
+</div>
 
 <script>
   const KEY = 'globin:lang';

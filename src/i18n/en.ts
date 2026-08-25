@@ -46,7 +46,8 @@ export const en: Content = {
     email: 'Send us an email',
     services: 'See what we build',
     skipToContent: 'Skip to content',
-    openMenu: 'Open menu',
+    menu: 'Menu',
+    closeMenu: 'Close',
     homeLabel: 'Globin — home',
   },
 

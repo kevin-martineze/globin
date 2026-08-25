@@ -41,7 +41,8 @@ export const es: Content = {
     email: 'Escribirnos por correo',
     services: 'Conocer nuestros servicios',
     skipToContent: 'Saltar al contenido',
-    openMenu: 'Abrir menú',
+    menu: 'Menú',
+    closeMenu: 'Cerrar',
     homeLabel: 'Globin — inicio',
   },
 
