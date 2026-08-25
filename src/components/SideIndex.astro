@@ -12,6 +12,23 @@ const sections = t.sections;
  * are looking at, while a rail tells you where you are in the whole document
  * and how much is left — which is what a long single-page site actually needs.
  *
+ * So it is drawn as a scale, not as a list of links: one hairline through the
+ * tick column with a teal segment that reaches the active row, the way a
+ * measure is read. The rail earns its place by being that segment; the numbers
+ * are the graduations on it.
+ *
+ * It sits in the gutter the shell reserves for it — `--gutter` and the `--rail-*`
+ * tokens are declared together in global.css, because a gutter narrower than
+ * the rail is what put the numbers on top of the type in the first place.
+ * Nothing here overlaps the content at rest, by construction rather than by
+ * tuning.
+ *
+ * The labels are the one thing that does overlap, and only while the rail is
+ * being used: they open on hover or focus over a blurred panel, the way a menu
+ * does. They deliberately do *not* open on the active item on their own — an
+ * unrequested label printing itself across the headline is the bug this
+ * component used to have.
+ *
  * Below 1280px it is hidden rather than reflowed. There is no room for a
  * persistent rail on a laptop-narrow window, and a collapsed version of it
  * would just be the header menu again.
@@ -25,7 +42,7 @@ const sections = t.sections;
         <li>
           <a href={section.href} data-index-link={section.href}>
             <span class="n">{String(index + 1).padStart(2, '0')}</span>
-            <span class="dash" aria-hidden="true" />
+            <span class="tick" aria-hidden="true" />
             <span class="label">{section.label}</span>
           </a>
         </li>
@@ -43,93 +60,179 @@ const sections = t.sections;
     .side-index {
       position: fixed;
       top: 50%;
-      left: max(1.5rem, calc((100vw - 96rem) / 2 + 1.5rem));
+      /* Anchored to the shell's content edge rather than to the viewport: the
+         first term is the shell's own centring margin, `--gutter` walks in to
+         where the type starts, and the rest walks back out by the width of the
+         rail plus its clearance. `100vw` counts the scrollbar and the shell
+         does not, so the rail lands a few pixels right of this figure — which
+         is what the clearance absorbs, and why it is not tuned to zero. */
+      left: calc(
+        max(0px, (100vw - 96rem) / 2) + var(--gutter) - var(--rail-clear) - var(--rail-w) -
+          var(--rail-pad)
+      );
       z-index: 40;
       display: block;
+      padding: var(--rail-pad);
       transform: translateY(-50%);
     }
-  }
 
-  .side-index ol {
-    display: grid;
-    gap: 0.55rem;
-  }
+    /* The panel exists only while the rail is in use. Opacity gates the blur
+       too — a fully transparent element does not filter its backdrop — so this
+       can stay declared and still leave nothing behind at rest. */
+    .side-index::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border: 1px solid var(--edge);
+      border-radius: 1.1rem;
+      background: color-mix(in oklab, var(--color-ink-950) 82%, transparent);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      transition: opacity 0.45s var(--ease-out-expo);
+    }
 
-  .side-index a {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: color-mix(in oklab, var(--color-bone) 28%, transparent);
-    transition: color 0.35s var(--ease-out-expo);
-  }
+    .side-index:hover::before,
+    .side-index:focus-within::before {
+      opacity: 1;
+    }
 
-  .n {
-    font-variant-numeric: tabular-nums;
-  }
+    .side-index ol {
+      position: relative;
+      display: grid;
+    }
 
-  /* The dash grows on the active item. It is the only indicator, which keeps
-     the rail readable as a scale rather than as a menu. */
-  .dash {
-    display: block;
-    width: 0.75rem;
-    height: 1px;
-    background: currentColor;
-    transition:
-      width 0.45s var(--ease-out-expo),
-      background-color 0.35s;
-  }
+    /* The track and the segment on it. Both start at the tick column, so the
+       ticks branch off the line instead of floating beside it. */
+    .side-index ol::before,
+    .side-index ol::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: calc(var(--rail-num) + var(--rail-gap));
+      width: 1px;
+    }
 
-  /* Labels stay out of the way until the rail is being used. */
-  .label {
-    opacity: 0;
-    transform: translateX(-0.25rem);
-    transition:
-      opacity 0.35s var(--ease-out-expo),
-      transform 0.35s var(--ease-out-expo);
-  }
+    .side-index ol::before {
+      bottom: 0;
+      background: var(--edge);
+    }
 
-  .side-index:hover .label,
-  .side-index a:focus-visible .label {
-    opacity: 1;
-    transform: none;
-  }
+    /* Half a row past the active index, so the segment ends *on* the active
+       tick rather than short of it. It fades in from the top because a solid
+       bar of accent down the page competes with the type; a gradient reads as
+       distance travelled. */
+    .side-index ol::after {
+      height: calc(var(--rail-row) * (var(--active, 0) + 0.5));
+      background: linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--color-brand-accent) 12%, transparent),
+        var(--color-brand-accent)
+      );
+      transition: height 0.65s var(--ease-out-expo);
+    }
 
-  .side-index a:hover {
-    color: var(--color-bone);
-  }
+    .side-index li {
+      height: var(--rail-row);
+    }
 
-  .side-index a[aria-current='true'] {
-    color: var(--color-brand-accent);
-  }
+    /* Three fixed columns, and the label's is zero-width until the rail is
+       hovered. Fixed rather than intrinsic on purpose: an `auto` label column
+       would size to the longest section name even while invisible, and this is
+       a fixed overlay — that width would sit over the page swallowing clicks. */
+    .side-index a {
+      display: grid;
+      grid-template-columns: calc(var(--rail-num) + var(--rail-gap)) var(--rail-tick) 0rem;
+      align-items: center;
+      height: 100%;
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: color-mix(in oklab, var(--color-bone) 30%, transparent);
+      transition:
+        grid-template-columns 0.45s var(--ease-out-expo),
+        color 0.35s var(--ease-out-expo);
+    }
 
-  .side-index a[aria-current='true'] .dash {
-    width: 2rem;
-  }
+    .side-index:hover a,
+    .side-index:focus-within a {
+      grid-template-columns: calc(var(--rail-num) + var(--rail-gap)) var(--rail-tick)
+        var(--rail-label);
+      color: color-mix(in oklab, var(--color-bone) 52%, transparent);
+    }
 
-  .side-index a[aria-current='true'] .label {
-    opacity: 1;
-    transform: none;
+    .n {
+      padding-right: var(--rail-gap);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    /* The tick grows on the active item. With the track behind it, length is
+       the only indicator the rail needs — colour alone would make it a menu
+       with a highlighted row. */
+    .tick {
+      display: block;
+      width: 0.5rem;
+      height: 1px;
+      background: currentColor;
+      transition: width 0.5s var(--ease-out-expo);
+    }
+
+    .label {
+      overflow: hidden;
+      padding-left: 0.55rem;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.35s var(--ease-out-expo);
+    }
+
+    .side-index:hover .label,
+    .side-index:focus-within .label {
+      opacity: 1;
+    }
+
+    .side-index a:hover {
+      color: var(--color-bone);
+    }
+
+    /* After the hover rule, so the active item keeps its colour while the rail
+       is open — the two selectors have the same specificity. */
+    .side-index a[aria-current='true'] {
+      color: var(--color-brand-accent);
+    }
+
+    .side-index a[aria-current='true'] .tick {
+      width: var(--rail-tick);
+    }
   }
 </style>
 
 <script>
-  const links = new Map<string, HTMLAnchorElement>();
+  const rail = document.querySelector<HTMLElement>('[data-side-index]');
 
-  document.querySelectorAll<HTMLAnchorElement>('[data-index-link]').forEach((link) => {
-    const id = link.dataset.indexLink;
-    if (id) links.set(id.replace('#', ''), link);
-  });
+  const items = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>('[data-index-link]'),
+    (link) => ({ id: (link.dataset.indexLink ?? '').replace('#', ''), link }),
+  ).filter((item) => item.id);
 
-  if (links.size > 0) {
+  if (rail && items.length > 0) {
     const setActive = (id: string) => {
-      links.forEach((link, key) => {
-        if (key === id) link.setAttribute('aria-current', 'true');
-        else link.removeAttribute('aria-current');
+      let active = -1;
+
+      items.forEach((item, index) => {
+        if (item.id !== id) {
+          item.link.removeAttribute('aria-current');
+          return;
+        }
+        item.link.setAttribute('aria-current', 'true');
+        active = index;
       });
+
+      // The segment is drawn from this in CSS, so the index is published as a
+      // custom property rather than as a height: the row pitch stays a token
+      // and never has to be duplicated in JavaScript.
+      if (active >= 0) rail.style.setProperty('--active', String(active));
     };
 
     /**
@@ -149,8 +252,8 @@ const sections = t.sections;
       { rootMargin: '-12% 0px -72% 0px', threshold: 0 },
     );
 
-    links.forEach((_, id) => {
-      const section = document.getElementById(id);
+    items.forEach((item) => {
+      const section = document.getElementById(item.id);
       if (section) observer.observe(section);
     });
   }
