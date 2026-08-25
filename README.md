@@ -8,8 +8,8 @@ of truth for everything the page says. Open items are tracked in
 [`docs/pendientes.md`](docs/pendientes.md).
 
 **Stack:** Astro 7 (static) · Tailwind CSS 4 · GSAP 3 (ScrollTrigger, SplitText)
-· Lenis smooth scroll · self-hosted variable fonts (Archivo, Inter, JetBrains
-Mono).
+· Lenis smooth scroll · self-hosted variable fonts (Bricolage Grotesque, Inter,
+JetBrains Mono).
 
 ## Getting started
 
@@ -125,19 +125,33 @@ fill them. A third colour would be a colour the brand does not have.
 Components reference roles and never a raw hex, so resampling the `@theme` block
 is the whole rebrand.
 
-**Type.** Fraunces for headlines, Manrope for body, JetBrains Mono for
-micro-text. A serif display on a software site is the point: the brand is
-"ingenio", not "enterprise", and every competitor is set in a grotesque. `WONK`
-is on, which swaps in Fraunces' odd single-storey letterforms, and the optical
-size axis tracks the actual size — `.display` at 144, `.display-tight` at 32.
-Skipping that axis is what makes big serifs look thin and small ones clumsy.
+**Type.** Bricolage Grotesque for headlines, Inter for body, JetBrains Mono for
+micro-text.
+
+The page was set in Fraunces with its `WONK` axis on for its first version — a
+characterful display serif, chosen to stand apart from competitors set in
+grotesques. It did, but not in the register the page is selling in: at display
+size it read as an editorial or a design studio, and the buyer the brief
+describes is a company deciding who to trust with its systems. The differentiator
+was aimed at the competition rather than at the reader.
+
+Bricolage is the answer to both: a grotesque, so it carries the authority the
+market expects, but one with optical-size and width axes and a slightly
+irregular build, so the page does not land on the neutral default everyone
+ships. Character lives in the display face; the paragraph is where it costs
+comprehension, which is why the body is Inter and not something with a view.
+
+The optical size axis tracks the actual size — `.display` at 96,
+`.display-tight` at 24 — and `wdth` stays at 100 in both. Skipping the optical
+axis is what makes big type look thin and small type clumsy; condensing the
+headline would make it a magazine cover.
 
 Headlines are **sentence case, never uppercase**. An all-caps display line is the
 loudest thing a layout can borrow from another site.
 
 `<em>` inside a headline marks the brand word and is restyled to upright accent
-colour — the italic build is not loaded, so leaving `font-style` alone would let
-the browser synthesise a slanted Fraunces.
+colour — no italic build is loaded, so leaving `font-style` alone would let the
+browser synthesise a slanted face.
 
 **Layout.** `.shell` (max 96rem plus a fluid gutter) is the only container.
 `.hairline` is every border on the page, so contrast is tuned in one place.

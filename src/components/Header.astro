@@ -5,6 +5,32 @@ import { brand } from '../data/media';
 import { useContent, toLang, localePath } from '../i18n';
 import LanguageSwitch from './LanguageSwitch.astro';
 
+/**
+ * Masthead, not a navbar.
+ *
+ * The bar this replaces was the page's most borrowed component: mark on the
+ * left, sans-serif links in the middle, a globe pill and a filled white capsule
+ * on the right. That is the default shape of every software landing, and the
+ * white capsule in particular was the loudest thing on the screen while the
+ * brand's own accent sat unused two rows down.
+ *
+ * This is set as a masthead instead, which is the idiom the rest of the page
+ * already commits to: the site is one long document with an index rail in the
+ * margin, so its head is a plate — brand and controls on one line, a rule, and
+ * the running order spread edge to edge underneath. The links are set in mono
+ * micro-caps and each one carries a graduation that grows on hover, which is
+ * the same gesture as the index rail's tick and the service sheet's. The page
+ * has one hover vocabulary and this is now part of it.
+ *
+ * Scrolling past the hero reconfigures the plate into a single compact line
+ * (`grid-template-areas` does the move, so the markup order never changes) and
+ * drops the wordmark. The switch is discrete on purpose: it reads as the head
+ * settling into a running header, which is what it is.
+ *
+ * The mobile panel is a sibling of `<header>`, not a child. `backdrop-filter`
+ * on the stuck header makes it a containing block for fixed descendants, which
+ * would trap a full-screen panel inside the bar the moment you scrolled.
+ */
 const lang = toLang(Astro.currentLocale);
 const t = useContent(lang);
 ---
@@ -13,100 +39,214 @@ const t = useContent(lang);
   data-header
   class="fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500"
 >
-  <div class="shell flex items-center justify-between gap-6 py-5">
-    <a href={localePath(lang)} class="group flex items-center gap-3" aria-label={t.actions.homeLabel}>
-      {/* The link already names itself with aria-label, so both the mark and the
-          wordmark are decorative here — otherwise a screen reader announces the
-          brand name three times over. */}
-      <Image
-        src={brand.mark.src}
-        alt=""
-        aria-hidden="true"
-        widths={[44, 88]}
-        sizes="44px"
-        loading="eager"
-        class="size-11 shrink-0 object-contain"
-      />
-      <span
-        class="display-tight text-base leading-[1.15] tracking-[0.14em] text-bone"
-        aria-hidden="true"
-      >
-        {site.name}
-      </span>
-    </a>
-
-    <nav aria-label={t.footer.navLabel} class="hidden items-center gap-8 lg:flex">
-      {
-        t.nav.map((item) => (
-          <a
-            href={item.href}
-            class="relative text-sm text-muted transition-colors duration-300 after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-brand-accent after:transition-[width] after:duration-500 hover:text-bone hover:after:w-full"
-          >
-            {item.label}
-          </a>
-        ))
-      }
-    </nav>
-
-    <div class="flex items-center gap-3">
-      <div class="hidden sm:block">
-        <LanguageSwitch />
-      </div>
-
+  <div class="shell">
+    <div class="masthead">
       <a
-        href={site.ctaHref}
-        class="group relative hidden overflow-hidden rounded-full bg-bone px-5 py-2.5 text-sm font-medium text-ink-950 md:block"
+        href={localePath(lang)}
+        class="brand flex items-center"
+        aria-label={t.actions.homeLabel}
       >
-        {/* The fill wipes down from above on hover — the one flourish the header
-            gets, so it stays on the primary action only. */}
+        {/* The link already names itself with aria-label, so both the mark and the
+            wordmark are decorative here — otherwise a screen reader announces the
+            brand name three times over. */}
+        <Image
+          src={brand.mark.src}
+          alt=""
+          aria-hidden="true"
+          widths={[44, 88]}
+          sizes="44px"
+          loading="eager"
+          class="mark shrink-0 object-contain"
+        />
         <span
-          class="absolute inset-0 -translate-y-full bg-brand-accent transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0"
-        ></span>
-        <span class="relative transition-colors duration-300 group-hover:text-bone">
-          {t.actions.primary}
+          class="wordmark display-tight pl-3 text-base leading-[1.15] tracking-[0.14em] text-bone"
+          aria-hidden="true"
+        >
+          {site.name}
         </span>
       </a>
 
-      <button
-        type="button"
-        data-menu-toggle
-        aria-expanded="false"
-        aria-controls="menu-movil"
-        class="flex size-11 items-center justify-center rounded-full border hairline lg:hidden"
-      >
-        <span class="sr-only">{t.actions.openMenu}</span>
-        <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden="true">
-          <path d="M0 1h18M0 6h18M0 11h18" stroke="currentColor" stroke-width="1.5"></path>
-        </svg>
-      </button>
-    </div>
-  </div>
-
-  <div
-    id="menu-movil"
-    data-menu-panel
-    hidden
-    class="border-t hairline bg-ink-950/95 backdrop-blur-xl lg:hidden"
-  >
-    <div class="shell flex flex-col py-4">
-      <nav aria-label={t.footer.navLabel} class="flex flex-col">
+      <nav aria-label={t.footer.navLabel} class="masthead-nav hidden lg:flex">
         {
           t.nav.map((item) => (
-            <a href={item.href} class="border-b hairline py-4 text-lg text-bone">
+            <a
+              href={item.href}
+              class="group flex items-center gap-2.5 font-mono text-[0.7rem] tracking-[0.18em] text-muted uppercase transition-colors duration-300 hover:text-bone"
+            >
+              <span
+                class="h-px w-4 bg-bone/25 transition-[width,background-color] duration-500 ease-[var(--ease-out-expo)] group-hover:w-8 group-hover:bg-brand-accent"
+                aria-hidden="true"
+              />
               {item.label}
             </a>
           ))
         }
       </nav>
 
-      <div class="flex flex-wrap items-center gap-3 pt-5 sm:hidden">
-        <LanguageSwitch />
+      <div class="controls flex items-center gap-4 lg:gap-6">
+        <div class="hidden sm:block">
+          <LanguageSwitch />
+        </div>
+
+        {/* The accent, not a white slab: the hero already owns the solid teal
+            call to action, so the persistent one is its outline. The fill wipes
+            down from above on hover — the one flourish the head gets. */}
+        <a
+          href={site.ctaHref}
+          class="group relative hidden overflow-hidden rounded-full border border-brand-accent/45 px-5 py-2.5 text-sm text-bone transition-colors duration-500 hover:border-brand-accent md:block"
+        >
+          <span
+            class="absolute inset-0 -translate-y-full bg-brand-accent transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0"
+          ></span>
+          <span class="relative transition-colors duration-300 group-hover:text-ink-950">
+            {t.actions.primary}
+          </span>
+        </a>
+
+        {/* Labelled, not a bare circle with three lines in it: the label is the
+            button's accessible name and it says which of the two states you are
+            about to get. The rules cross into a close mark when it is open. */}
+        <button
+          type="button"
+          data-menu-toggle
+          aria-expanded="false"
+          aria-controls="menu-movil"
+          class="menu-toggle flex items-center gap-2.5 font-mono text-[0.68rem] tracking-[0.18em] text-bone uppercase lg:hidden"
+        >
+          <span data-menu-label>{t.actions.menu}</span>
+          <span class="bars relative block h-3 w-4" aria-hidden="true">
+            <span></span>
+            <span></span>
+          </span>
+        </button>
       </div>
     </div>
   </div>
 </header>
 
+{/* `data-lenis-prevent` keeps the smooth scroller from moving the page under an
+    open panel, which is the whole of the scroll lock — no class on <html>, and
+    nothing to leave behind if the panel is closed by a navigation. */}
+<div
+  id="menu-movil"
+  data-menu-panel
+  data-lenis-prevent
+  data-close-label={t.actions.closeMenu}
+  hidden
+  class="fixed inset-0 z-40 flex flex-col overflow-y-auto overscroll-contain bg-ink-950/98 pt-24 backdrop-blur-xl lg:hidden"
+>
+  <nav aria-label={t.footer.navLabel} class="shell flex flex-1 flex-col justify-center py-6">
+    {
+      t.nav.map((item, index) => (
+        <a href={item.href} class="group flex items-baseline gap-5 border-b hairline py-5">
+          <span class="font-mono text-[0.68rem] tracking-[0.18em] text-brand-accent/70">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <span class="display-tight text-[clamp(1.8rem,8.5vw,2.6rem)] text-bone">
+            {item.label}
+          </span>
+        </a>
+      ))
+    }
+  </nav>
+
+  <div class="shell flex items-center justify-between gap-4 border-t hairline py-7">
+    <LanguageSwitch />
+    <a
+      href={site.ctaHref}
+      class="rounded-full border border-brand-accent/45 px-5 py-2.5 text-sm text-bone"
+    >
+      {t.actions.primary}
+    </a>
+  </div>
+</div>
+
 <style>
+  /* Layout lives here rather than in utilities because the stuck state moves
+     the nav between rows, and `grid-template-areas` is the only thing that can
+     do that without reordering the markup. */
+  .masthead {
+    display: grid;
+    grid-template-areas: 'brand controls';
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    padding-block: 1.15rem;
+    transition: padding-block 0.5s var(--ease-out-expo);
+  }
+
+  .brand {
+    grid-area: brand;
+  }
+
+  .controls {
+    grid-area: controls;
+    justify-self: end;
+  }
+
+  .masthead-nav {
+    grid-area: nav;
+  }
+
+  .mark {
+    width: 2.75rem;
+    height: 2.75rem;
+    transition: width 0.5s var(--ease-out-expo), height 0.5s var(--ease-out-expo);
+  }
+
+  /* Collapsed by width, not by display: the padding is inside the box, so the
+     gap to the mark closes with it and nothing has to be animated twice. */
+  .wordmark {
+    max-width: 8rem;
+    overflow: hidden;
+    white-space: nowrap;
+    transition:
+      max-width 0.5s var(--ease-out-expo),
+      opacity 0.3s var(--ease-out-expo);
+  }
+
+  @media (min-width: 1024px) {
+    .masthead {
+      grid-template-areas:
+        'brand controls'
+        'nav nav';
+      padding-block: 1.4rem;
+      row-gap: 1.1rem;
+    }
+
+    /* Edge to edge: the running order reads as an index across the plate, not
+       as a cluster of links pushed to one side. */
+    .masthead-nav {
+      justify-content: space-between;
+      border-top: 1px solid var(--edge);
+      padding-top: 1.1rem;
+      transition: padding-top 0.5s var(--ease-out-expo);
+    }
+
+    [data-header].is-stuck .masthead {
+      grid-template-areas: 'brand nav controls';
+      grid-template-columns: auto 1fr auto;
+      padding-block: 0.8rem;
+      row-gap: 0;
+    }
+
+    [data-header].is-stuck .masthead-nav {
+      justify-content: center;
+      gap: 2.25rem;
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    [data-header].is-stuck .wordmark {
+      max-width: 0;
+      opacity: 0;
+    }
+
+    [data-header].is-stuck .mark {
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+  }
+
   /* Applied by motion.ts once you scroll past the hero. Kept in CSS so the
      header still reads correctly if JavaScript never boots. */
   [data-header].is-stuck {
@@ -114,22 +254,72 @@ const t = useContent(lang);
     backdrop-filter: blur(18px) saturate(1.2);
     border-bottom: 1px solid var(--edge);
   }
+
+  .bars span {
+    position: absolute;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transition: transform 0.45s var(--ease-out-expo);
+  }
+
+  .bars span:first-child {
+    top: 0.25rem;
+  }
+
+  .bars span:last-child {
+    bottom: 0.25rem;
+  }
+
+  [data-menu-toggle][aria-expanded='true'] .bars span:first-child {
+    transform: translateY(0.3rem) rotate(45deg);
+  }
+
+  [data-menu-toggle][aria-expanded='true'] .bars span:last-child {
+    transform: translateY(-0.3rem) rotate(-45deg);
+  }
+
+  /* The `hidden` attribute is a UA rule, so a `flex` utility on the same
+     element would win and the panel would ship open. */
+  [data-menu-panel][hidden] {
+    display: none;
+  }
 </style>
 
 <script>
   const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const label = document.querySelector<HTMLElement>('[data-menu-label]');
   const panel = document.querySelector<HTMLElement>('[data-menu-panel]');
 
-  toggle?.addEventListener('click', () => {
-    const open = toggle.getAttribute('aria-expanded') === 'true';
-    toggle.setAttribute('aria-expanded', String(!open));
-    if (panel) panel.hidden = open;
-  });
+  if (toggle && panel) {
+    // Read once from the markup so the two states stay translated by the
+    // `Content` interface rather than by a string in here.
+    const labels = { open: label?.textContent ?? '', close: panel.dataset.closeLabel ?? '' };
 
-  panel?.querySelectorAll('a').forEach((link) =>
-    link.addEventListener('click', () => {
-      toggle?.setAttribute('aria-expanded', 'false');
-      if (panel) panel.hidden = true;
-    }),
-  );
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      panel.hidden = !open;
+      if (label) label.textContent = open ? labels.close : labels.open;
+      if (open) panel.querySelector<HTMLAnchorElement>('a')?.focus();
+      else toggle.focus();
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    panel.querySelectorAll('a').forEach((link) =>
+      link.addEventListener('click', () => {
+        toggle.setAttribute('aria-expanded', 'false');
+        panel.hidden = true;
+        if (label) label.textContent = labels.open;
+      }),
+    );
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !panel.hidden) setOpen(false);
+    });
+  }
 </script>

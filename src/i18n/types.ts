@@ -67,7 +67,9 @@ export interface Content {
     email: string;
     services: string;
     skipToContent: string;
-    openMenu: string;
+    /** Visible label on the mobile trigger, and its accessible name. */
+    menu: string;
+    closeMenu: string;
     homeLabel: string;
   };
 
