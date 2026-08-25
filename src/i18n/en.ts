@@ -90,8 +90,7 @@ export const en: Content = {
         name: 'Custom software',
         summary:
           'Applications and platforms designed around your company’s actual processes, goals and constraints.',
-        detail: 'Internal systems · management platforms · digital products',
-        icon: 'blocks',
+        detail: 'Internal systems · Management platforms · Digital products',
         featured: true,
       },
       {
@@ -99,8 +98,7 @@ export const en: Content = {
         name: 'Mobile apps',
         summary:
           'Apps for Android, iOS or both, with a consistent experience and room to grow.',
-        detail: 'Android · iOS · cross-platform',
-        icon: 'device',
+        detail: 'Android · iOS · Cross-platform',
         featured: true,
       },
       {
@@ -108,32 +106,28 @@ export const en: Content = {
         name: 'Web platforms and ecommerce',
         summary:
           'Websites, company portals, digital platforms and online stores, built to bring in customers or to make your operations easier.',
-        detail: 'Corporate sites · portals · online stores',
-        icon: 'window',
+        detail: 'Corporate sites · Portals · Online stores',
       },
       {
         id: 'automatizacion',
         name: 'Automation and integrations',
         summary:
           'We digitise repetitive work and connect your tools, so there are fewer errors, less wasted time, and one place to look for information.',
-        detail: 'Backend · APIs · system integrations',
-        icon: 'flow',
+        detail: 'Backend · APIs · System integrations',
       },
       {
         id: 'cloud-devops',
         name: 'Cloud and DevOps',
         summary:
           'We get your solution ready to grow, to ship changes safely, and to stay stable as your user numbers climb.',
-        detail: 'Cloud · servers · containers · CI/CD · scalable environments',
-        icon: 'cloud',
+        detail: 'Cloud · Servers · Containers · CI/CD · Scalable environments',
       },
       {
         id: 'soporte-evolucion',
         name: 'Support and evolution',
         summary:
           'Launch is not the end: maintenance, improvements, monitoring and continuous development so the solution keeps up with the business.',
-        detail: 'Corrective maintenance · monitoring · new features',
-        icon: 'pulse',
+        detail: 'Corrective maintenance · Monitoring · New features',
       },
     ],
   },
