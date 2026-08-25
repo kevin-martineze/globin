@@ -74,6 +74,34 @@
     color-scheme: dark;
   }
 
+  /* The index rail (SideIndex.astro) lives in the left gutter, so from 1280px
+     up the gutter has to be wide enough to hold it. Its geometry is declared
+     here rather than in the component because the two are really one number:
+     the rail is positioned off `--gutter`, and a gutter narrower than the rail
+     puts the numbers on top of the type — which is exactly what it used to do.
+
+     The floor is the sum of what the rail needs, left to right: a viewport
+     margin, the panel padding, the rail itself, and the clearance before the
+     first character of the shell. Lower it and they collide again. */
+  @media (min-width: 1280px) {
+    :root {
+      --rail-num: 1.1rem;
+      --rail-gap: 0.65rem;
+      --rail-tick: 1.6rem;
+      /* Row pitch. The accent segment's height is this multiplied by the active
+         index, so the rhythm is made of row height alone — a pitch built from a
+         height plus a gap cannot be multiplied by anything. */
+      --rail-row: 1.6rem;
+      --rail-label: 7rem;
+      --rail-pad: 0.85rem;
+      --rail-clear: 1.5rem;
+      /* Ink width at rest: number column, its gap, and the tick column. */
+      --rail-w: calc(var(--rail-num) + var(--rail-gap) + var(--rail-tick));
+
+      --gutter: clamp(7.25rem, 7.5vw, 9rem);
+    }
+  }
+
   html {
     /* Lenis drives scrolling; native smooth scrolling would fight it. */
     scroll-behavior: auto;

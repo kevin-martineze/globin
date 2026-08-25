@@ -151,6 +151,16 @@ rail tells you where you are in the document and how much is left, which is what
 a long single-page site actually needs. Below that width it is hidden rather
 than reflowed — a collapsed rail is just the header menu again.
 
+The rail is drawn as a scale, not as a list of links: one hairline through the
+tick column with a teal segment that reaches the active row, and the numbers as
+graduations on it. It **lives in a gutter reserved for it** — `--gutter` widens
+at 1280px and the `--rail-*` tokens are declared beside it in `global.css`,
+because they are really one measurement. A gutter narrower than the rail is what
+made an earlier version print its numbers across the hero headline. Section
+labels are the one part that overlaps the text, and only while the rail is being
+used: they open on hover or focus over a blurred panel, the way a menu does, and
+never on the active item by themselves.
+
 Run the dev server and open `/estilo` for the whole system rendered from the real
 tokens. It is `noindex` and excluded from the sitemap.
 
