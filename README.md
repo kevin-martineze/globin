@@ -125,8 +125,14 @@ fill them. A third colour would be a colour the brand does not have.
 Components reference roles and never a raw hex, so resampling the `@theme` block
 is the whole rebrand.
 
-**Type.** Newsreader for headlines, Instrument Sans for body, JetBrains Mono for
-micro-text.
+**Type.** Newsreader for headlines, Instrument Sans for body and labels,
+JetBrains Mono for the technical register only (the terms under each service,
+code on the style guide).
+
+Labels, navigation and indices are sentence case in the body face at a medium
+weight (`.eyebrow`). They used to be mono, all caps and tracked a quarter of an
+em — the kicker every template ships, and the clearest tell that the page was
+generated.
 
 The pairing follows Claude's apps: a news serif for what is read, a compact
 grotesque for what is operated. Anthropic's own faces are not licensable, so both

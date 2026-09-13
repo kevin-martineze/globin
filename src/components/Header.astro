@@ -71,7 +71,7 @@ const t = useContent(lang);
           t.nav.map((item) => (
             <a
               href={item.href}
-              class="group flex items-center gap-2.5 font-mono text-[0.7rem] tracking-[0.18em] text-muted uppercase transition-colors duration-300 hover:text-bone"
+              class="eyebrow group flex items-center gap-2.5 transition-colors duration-300 hover:text-bone"
             >
               <span
                 class="h-px w-4 bg-bone/25 transition-[width,background-color] duration-500 ease-[var(--ease-out-expo)] group-hover:w-8 group-hover:bg-brand-accent"
@@ -111,7 +111,7 @@ const t = useContent(lang);
           data-menu-toggle
           aria-expanded="false"
           aria-controls="menu-movil"
-          class="menu-toggle flex items-center gap-2.5 font-mono text-[0.68rem] tracking-[0.18em] text-bone uppercase lg:hidden"
+          class="menu-toggle eyebrow flex items-center gap-2.5 text-bone lg:hidden"
         >
           <span data-menu-label>{t.actions.menu}</span>
           <span class="bars relative block h-3 w-4" aria-hidden="true">
@@ -139,7 +139,7 @@ const t = useContent(lang);
     {
       t.nav.map((item, index) => (
         <a href={item.href} class="group flex items-baseline gap-5 border-b hairline py-5">
-          <span class="font-mono text-[0.68rem] tracking-[0.18em] text-brand-accent/70">
+          <span class="text-xs text-brand-accent/70 tabular-nums">
             {String(index + 1).padStart(2, '0')}
           </span>
           <span class="display-tight text-[clamp(1.8rem,8.5vw,2.6rem)] text-bone">

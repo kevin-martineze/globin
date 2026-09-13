@@ -14,9 +14,11 @@
      sans and the serif is the owner's call on top of it, logged in
      docs/pendientes.md. Its slightly compact build is the nearest open cousin of
      Styrene, and it is not the default every other page is set in.
-   - JetBrains Mono only for micro-labels — the section index, tags, technical
-     asides. That is the brief's "elementos de código, usados con moderación";
-     it never sets a paragraph. */
+   - JetBrains Mono only for the technical register — the terms under each
+     service, and code on the style guide. That is the brief's "elementos de
+     código, usados con moderación". Labels, navigation and indices used to be
+     set in it too, all caps and tracked wide, which is the kicker every
+     generated page ships; they are in the body face now (see `.eyebrow`). */
 @import "@fontsource-variable/newsreader/opsz.css";
 @import "@fontsource-variable/instrument-sans";
 @import "@fontsource-variable/jetbrains-mono";
@@ -180,14 +182,17 @@
     letter-spacing: -0.01em;
   }
 
-  /* The register-marked technical voice, and anything that should read as a
-     machine label rather than as prose. */
+  /* Section labels and small navigation: body face, sentence case, normal
+     tracking. The monospaced all-caps label spaced a quarter of an em apart is
+     the kicker every template puts over its headline, and mono belongs to the
+     technical register, not to a word like "Servicios". Weight and colour now
+     do what the capitals and the spacing did — enough to set it apart from a
+     paragraph without dressing it as a machine readout. */
   .eyebrow {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 500;
-    font-size: 0.7rem;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
+    font-size: 0.8125rem;
+    line-height: 1.4;
     color: var(--color-muted);
   }
 

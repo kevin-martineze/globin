@@ -22,7 +22,7 @@ const t = useContent(toLang(Astro.currentLocale));
     {
       t.engagements.items.map((engagement, index) => (
         <article class="card flex flex-col p-8 lg:p-10" data-reveal data-reveal-delay={index * 0.1}>
-          <p class="font-mono text-[0.7rem] tracking-[0.2em] text-brand-accent/80 uppercase">
+          <p class="eyebrow text-brand-accent/80">
             {engagement.kicker}
           </p>
           <h3 class="display-tight mt-4 text-3xl text-bone">{engagement.name}</h3>

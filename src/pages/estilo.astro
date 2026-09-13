@@ -115,9 +115,12 @@ const motionAttrs = [
       </div>
       <div class="rounded-2xl border hairline p-8">
         <p class="eyebrow mb-4">.eyebrow — etiquetas de sección</p>
-        <p class="font-mono text-xs tracking-wide text-bone/60">
-          JetBrains Mono · solo microtexto: índices, etiquetas técnicas, avisos.
-          Nunca un párrafo.
+        <p class="max-w-xl text-sm leading-relaxed text-muted">
+          Instrument Sans a peso medio, en minúsculas normales y sin espaciado: la
+          etiqueta se separa del párrafo por peso y color, no por mayúsculas.
+        </p>
+        <p class="mt-3 font-mono text-xs text-bone/60">
+          JetBrains Mono · solo registro técnico: términos de servicio y código.
         </p>
       </div>
       <div class="rounded-2xl border hairline p-8">
@@ -135,7 +138,7 @@ const motionAttrs = [
   <Section id="componentes" label="Componentes" title="Piezas base" space="tight">
     <div class="grid gap-5 lg:grid-cols-3">
       <article class="card flex flex-col p-8">
-        <p class="font-mono text-[0.7rem] tracking-[0.2em] text-muted uppercase">Tarjeta</p>
+        <p class="eyebrow">Tarjeta</p>
         <h3 class="display-tight mt-3 text-3xl text-bone">.card</h3>
         <p class="mt-4 text-sm leading-relaxed text-muted">
           Radio 1.5rem, borde hairline, fondo ink-900 al 60 %. En hover sube 4px y
@@ -144,7 +147,7 @@ const motionAttrs = [
       </article>
 
       <article class="card flex flex-col border-brand-accent/40 bg-brand-accent/[0.06] p-8">
-        <p class="font-mono text-[0.7rem] tracking-[0.2em] text-muted uppercase">Tarjeta</p>
+        <p class="eyebrow">Tarjeta</p>
         <h3 class="display-tight mt-3 text-3xl text-bone">Destacada</h3>
         <p class="mt-4 text-sm leading-relaxed text-muted">
           Misma tarjeta con borde y fondo teñidos con el acento. Dos como máximo
@@ -153,7 +156,7 @@ const motionAttrs = [
       </article>
 
       <div class="flex flex-col justify-center gap-4 rounded-[1.5rem] border hairline p-8">
-        <p class="font-mono text-[0.7rem] tracking-[0.2em] text-muted uppercase">Botones</p>
+        <p class="eyebrow">Botones</p>
         <a
           href="#componentes"
           class="group relative overflow-hidden rounded-full bg-bone px-6 py-3.5 text-center text-sm font-medium text-ink-950"
