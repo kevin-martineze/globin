@@ -50,6 +50,11 @@ Qué hace falta, una pieza por generación:
       logo (teal #389888, fondo #091016). Si la identidad define otros valores,
       se resamplea el bloque `@theme` de `src/styles/global.css` y nada más: los
       componentes solo referencian roles.
+      Tipografía provisional: titulares en Newsreader (serif) y texto en
+      Instrument Sans. El brief (§11) pide "una sans serif moderna y legible"; el
+      cuerpo la cumple, pero la serif en titulares es una decisión propia que
+      falta confirmar con el cliente. Volver a una sans es cambiar
+      `--font-display` en `@theme`.
 - [ ] **Equipo.** El brief deja pendiente "nombre y perfil de los fundadores".
       Con nombres, rol y foto se puede añadir la sección de equipo, que el propio
       brief nombra como señal de confianza (§9).
