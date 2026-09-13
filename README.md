@@ -8,7 +8,7 @@ of truth for everything the page says. Open items are tracked in
 [`docs/pendientes.md`](docs/pendientes.md).
 
 **Stack:** Astro 7 (static) · Tailwind CSS 4 · GSAP 3 (ScrollTrigger, SplitText)
-· Lenis smooth scroll · self-hosted variable fonts (Bricolage Grotesque, Inter,
+· Lenis smooth scroll · self-hosted variable fonts (Newsreader, Instrument Sans,
 JetBrains Mono).
 
 ## Getting started
@@ -125,26 +125,34 @@ fill them. A third colour would be a colour the brand does not have.
 Components reference roles and never a raw hex, so resampling the `@theme` block
 is the whole rebrand.
 
-**Type.** Bricolage Grotesque for headlines, Inter for body, JetBrains Mono for
-micro-text.
+**Type.** Newsreader for headlines, Instrument Sans for body and labels,
+JetBrains Mono for the technical register only (the terms under each service,
+code on the style guide).
 
-The page was set in Fraunces with its `WONK` axis on for its first version — a
-characterful display serif, chosen to stand apart from competitors set in
-grotesques. It did, but not in the register the page is selling in: at display
-size it read as an editorial or a design studio, and the buyer the brief
-describes is a company deciding who to trust with its systems. The differentiator
-was aimed at the competition rather than at the reader.
+Labels, navigation and indices are sentence case in the body face at a medium
+weight (`.eyebrow`). They used to be mono, all caps and tracked a quarter of an
+em — the kicker every template ships, and the clearest tell that the page was
+generated.
 
-Bricolage is the answer to both: a grotesque, so it carries the authority the
-market expects, but one with optical-size and width axes and a slightly
-irregular build, so the page does not land on the neutral default everyone
-ships. Character lives in the display face; the paragraph is where it costs
-comprehension, which is why the body is Inter and not something with a view.
+The pairing follows Claude's apps: a news serif for what is read, a compact
+grotesque for what is operated. Anthropic's own faces are not licensable, so both
+are open substitutes — Newsreader stands in for Tiempos, Instrument Sans for
+Styrene.
 
-The optical size axis tracks the actual size — `.display` at 96,
-`.display-tight` at 24 — and `wdth` stays at 100 in both. Skipping the optical
-axis is what makes big type look thin and small type clumsy; condensing the
-headline would make it a magazine cover.
+It is the third set. The first was Fraunces with its `WONK` axis on, which read
+as an editorial or a design studio rather than as a firm selling systems. The
+second, Bricolage Grotesque over Inter, fixed the register but landed on the
+combination generated landing pages ship, and the page read as one. Newsreader
+is a serif with nothing to perform, which is what separates it from Fraunces: it
+gives the headline calm, not personality.
+
+The brief (§11) asks for a sans. The body keeps one; the serif headline is an
+open decision logged in `docs/pendientes.md`, and reverting it is one token.
+
+The optical size axis tracks the actual size — `.display` at 72 (the top of
+Newsreader's range), `.display-tight` at 24. Skipping it is what makes big type
+look thin and small type clumsy. Headline weight stays near regular: a bold serif
+at display size is a newspaper masthead, and heavy strokes clot on a dark ground.
 
 Headlines are **sentence case, never uppercase**. An all-caps display line is the
 loudest thing a layout can borrow from another site.

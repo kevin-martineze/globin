@@ -1,23 +1,26 @@
 @import "tailwindcss";
 
-/* Self-hosted variable fonts.
-   - Bricolage Grotesque for headlines. The page used to be set in Fraunces with
-     its WONK axis on, which is a characterful display serif; at display size it
-     read as an editorial or a design studio rather than as the software firm
-     that is actually selling here, and the buyer the brief describes — a small
-     or mid-sized company deciding who to trust with its systems — is not the
-     reader that voice was written for. Bricolage keeps the page from being
-     generic anyway: it carries optical-size and width axes and a slightly
-     irregular build, so it is a grotesque with a hand in it rather than the
-     neutral default.
-   - Inter for body copy: the brief asks for "una sans serif moderna y legible",
-     and this is the one nobody has to think about. The display face is where
-     the character belongs; the paragraph is where it costs comprehension.
-   - JetBrains Mono only for micro-labels — the section index, tags, technical
-     asides. That is the brief's "elementos de código, usados con moderación";
-     it never sets a paragraph. */
-@import "@fontsource-variable/bricolage-grotesque";
-@import "@fontsource-variable/inter";
+/* Self-hosted variable fonts. The pairing follows the one Claude's apps use — a
+   news serif for what is read, a compact grotesque for what is operated — built
+   from open substitutes, since Anthropic's own faces are not licensable.
+   - Newsreader for headlines. Bricolage Grotesque over Inter was the combination
+     every generated landing page ships, and the page read as one. A serif is the
+     quickest way out of that register. The earlier serif (Fraunces, WONK on) was
+     dropped for reading as an editorial; Newsreader is a reading face with no
+     quirks to perform, so it lends the headline calm rather than personality. It
+     carries an optical-size axis, and the display classes track it.
+   - Instrument Sans for body copy. It keeps the brief's "sans serif moderna y
+     legible" for everything that is not a headline — the brief (§11) asks for a
+     sans and the serif is the owner's call on top of it, logged in
+     docs/pendientes.md. Its slightly compact build is the nearest open cousin of
+     Styrene, and it is not the default every other page is set in.
+   - JetBrains Mono only for the technical register — the terms under each
+     service, and code on the style guide. That is the brief's "elementos de
+     código, usados con moderación". Labels, navigation and indices used to be
+     set in it too, all caps and tracked wide, which is the kicker every
+     generated page ships; they are in the body face now (see `.eyebrow`). */
+@import "@fontsource-variable/newsreader/opsz.css";
+@import "@fontsource-variable/instrument-sans";
 @import "@fontsource-variable/jetbrains-mono";
 @import "lenis/dist/lenis.css";
 
@@ -62,8 +65,8 @@
   --color-bone: #f1f5f3;
   --color-muted: #8a9a94;
 
-  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Newsreader Variable", Georgia, ui-serif, serif;
+  --font-sans: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", monospace;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -144,17 +147,18 @@
 @layer components {
   /* Headlines. Sentence case, never uppercase: an all-caps display line is the
      single loudest thing a layout can borrow from another site, and this one
-     needs its own voice. Optical size pushed to the display end and the width
-     axis left at normal — a condensed headline is a magazine cover, and this
-     page is selling systems, not a story. */
+     needs its own voice. Optical size at the top of the axis, where the serif
+     gains its contrast. Weight stays near regular: a bold serif at this size
+     turns into a newspaper masthead, and on a dark ground heavy strokes clot.
+     Serifs already close the gap between letters, so the tracking is looser
+     than a grotesque would take. */
   .display {
     font-family: var(--font-display);
     font-variation-settings:
-      "wght" 700,
-      "opsz" 96,
-      "wdth" 100;
-    line-height: 0.96;
-    letter-spacing: -0.03em;
+      "wght" 450,
+      "opsz" 72;
+    line-height: 1;
+    letter-spacing: -0.02em;
   }
 
   /* `<em>` inside a headline marks the brand word, not emphasis-as-italic. No
@@ -172,21 +176,23 @@
   .display-tight {
     font-family: var(--font-display);
     font-variation-settings:
-      "wght" 650,
-      "opsz" 24,
-      "wdth" 100;
-    line-height: 1.06;
-    letter-spacing: -0.015em;
+      "wght" 500,
+      "opsz" 24;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
   }
 
-  /* The register-marked technical voice, and anything that should read as a
-     machine label rather than as prose. */
+  /* Section labels and small navigation: body face, sentence case, normal
+     tracking. The monospaced all-caps label spaced a quarter of an em apart is
+     the kicker every template puts over its headline, and mono belongs to the
+     technical register, not to a word like "Servicios". Weight and colour now
+     do what the capitals and the spacing did — enough to set it apart from a
+     paragraph without dressing it as a machine readout. */
   .eyebrow {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-weight: 500;
-    font-size: 0.7rem;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
+    font-size: 0.8125rem;
+    line-height: 1.4;
     color: var(--color-muted);
   }
 
